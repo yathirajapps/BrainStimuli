@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/customDialogLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cust_mes_bg">
+
+
+    <TextView
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cust_mes_bg_top"
+        android:fontFamily="@font/baumans"
+        android:gravity="center"
+        android:text="Game Over!"
+        android:textColor="@color/white"
+        android:textSize="24dp" />
+
+    <TextView
+        android:id="@+id/yourScoreTextView"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/headerTextView"
+        android:gravity="center"
+        android:background="@color/appThemeColor"
+        android:textColor="@color/white"
+        android:fontFamily="@font/baumans"
+        android:text="Your Score : " />
+
+    <Button
+        android:id="@+id/leaderboardButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/yourScoreTextView"
+        android:background="@color/white"
+        android:layout_marginBottom="1dp"
+        android:textColor="@color/appThemeColor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+        android:fontFamily="@font/baumans"
+        android:text="Leadersboard" />
+
+    <Button
+        android:id="@+id/menuButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/leaderboardButton"
+        android:background="@color/white"
+        android:layout_marginBottom="1dp"
+        android:textColor="@color/appThemeColor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+        android:fontFamily="@font/baumans"
+        android:text="Main Menu" />
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/menuButton"
+        android:layout_marginBottom="1dp"
+        android:background="@drawable/cust_mes_bg_bottom"
+        android:text="Continue the game?"
+        android:textColor="@color/appThemeColor"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+        android:fontFamily="@font/baumans" />
+</RelativeLayout>

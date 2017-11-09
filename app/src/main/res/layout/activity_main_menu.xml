@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainMenuLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/numbersimage5"
+    tools:context="com.yathirajjp.brainstimuli.MainMenu">
+
+    <RelativeLayout
+        android:id="@+id/quickMathRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        android:onClick="showQuickMath">
+
+        <TextView
+            android:id="@+id/quickMathScore"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:gravity="left|center"
+            android:paddingLeft="5dp"
+            android:text="High Score:" />
+
+        <ImageView
+            android:id="@+id/timerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/quickMathScore"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/timer" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timerImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="Quick Math"
+            android:textColor="@color/white" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/trueFalseRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/quickMathRelLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="20dp"
+        android:onClick="showTrueFalse">
+
+        <TextView
+            android:id="@+id/trueFalseScore"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:gravity="left|center"
+            android:paddingLeft="5dp"
+            android:text="High Score:" />
+
+        <ImageView
+            android:id="@+id/trueFalseImageView"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/trueFalseScore"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/thumb_up_down_edit" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trueFalseImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="True / False"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ratingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:layout_marginBottom="5dp"
+            android:text="Are you enjoying this? How about rating this app?" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/textView3"
+            android:layout_centerInParent="true"
+            android:background="@color/white"
+            android:onClick="rateTheApp"
+            app:srcCompat="@drawable/fivestarsrating" />
+    </RelativeLayout>
+
+</RelativeLayout>

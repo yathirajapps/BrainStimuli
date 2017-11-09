@@ -21,19 +21,19 @@
         <TextView
             android:id="@+id/quickMathScore"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="1dp"
+            android:padding="2dp"
             android:background="@color/white"
-            android:gravity="left|center"
-            android:paddingLeft="5dp"
+            android:gravity="start|center"
+            android:textSize="12sp"
             android:text="High Score:" />
 
         <ImageView
             android:id="@+id/timerImageView"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/quickMathScore"
             android:background="@drawable/cust_mes_bg_top"
             app:srcCompat="@drawable/timer" />
@@ -46,9 +46,9 @@
             android:layout_marginBottom="4dp"
             android:background="@color/appThemeColor"
             android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:padding="2dp"
             android:text="Quick Math"
+            android:textSize="13sp"
             android:textColor="@color/white" />
 
 
@@ -62,25 +62,25 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:onClick="showTrueFalse">
 
         <TextView
             android:id="@+id/trueFalseScore"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="1dp"
+            android:padding="2dp"
             android:background="@color/white"
-            android:gravity="left|center"
-            android:paddingLeft="5dp"
+            android:gravity="start|center"
+            android:textSize="12sp"
             android:text="High Score:" />
 
         <ImageView
             android:id="@+id/trueFalseImageView"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/trueFalseScore"
             android:background="@drawable/cust_mes_bg_top"
             app:srcCompat="@drawable/thumb_up_down_edit" />
@@ -93,9 +93,9 @@
             android:layout_marginBottom="4dp"
             android:background="@color/appThemeColor"
             android:gravity="center"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
+            android:padding="2dp"
             android:text="True / False"
+            android:textSize="13sp"
             android:textColor="@color/white" />
     </RelativeLayout>
 
@@ -113,6 +113,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:textColor="@android:color/black"
+            android:textSize="12sp"
             android:gravity="center"
             android:layout_marginBottom="5dp"
             android:text="Are you enjoying this? How about rating this app?" />

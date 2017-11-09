@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -92,7 +93,7 @@ public class QuickMath extends AppCompatActivity {
 
                     incorrectAnswer = random.nextInt(maxRandom * 2);
 
-                    while (incorrectAnswer == correctAnswer) {
+                    while (incorrectAnswer == correctAnswer || existsInAnswer(incorrectAnswer)) {
                         incorrectAnswer = random.nextInt(maxRandom * 2);
                     }
                     answers.add(Integer.toString(incorrectAnswer));
@@ -131,7 +132,7 @@ public class QuickMath extends AppCompatActivity {
 
                     incorrectAnswer = random.nextInt(maxRandom);
 
-                    while (incorrectAnswer == correctAnswer) {
+                    while (incorrectAnswer == correctAnswer || existsInAnswer(incorrectAnswer)) {
                         incorrectAnswer = random.nextInt(maxRandom);
                     }
                     answers.add(Integer.toString(incorrectAnswer));
@@ -165,7 +166,7 @@ public class QuickMath extends AppCompatActivity {
 
                     incorrectAnswer = random.nextInt(tempRand * tempRand);
 
-                    while (incorrectAnswer == correctAnswer || ((incorrectAnswer % 10) != (correctAnswer % 10))) {
+                    while (incorrectAnswer == correctAnswer || ((incorrectAnswer % 10) != (correctAnswer % 10)) || existsInAnswer(incorrectAnswer)) {
                         incorrectAnswer = random.nextInt(tempRand * tempRand);
                     }
                     answers.add(Integer.toString(incorrectAnswer));
@@ -192,6 +193,7 @@ public class QuickMath extends AppCompatActivity {
         TextView yourScoreTextView = (TextView)customDialog.findViewById(R.id.yourScoreTextView);
         Button menuButton = (Button)customDialog.findViewById(R.id.menuButton);
         Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
+        Button leaderBoardButton = (Button)customDialog.findViewById(R.id.leaderboardButton);
 
         headerTextView.setText(pHeading);
         yourScoreTextView.setText(pScore);
@@ -219,6 +221,14 @@ public class QuickMath extends AppCompatActivity {
                 scoreText.setText(Integer.toString(score));
                 startQuickMath();
 
+            }
+        });
+
+        //Method for LeadersBoard click
+        leaderBoardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(QuickMath.this, "Sorry, Leadersboard is still under development.", Toast.LENGTH_SHORT).show();
             }
         });
 

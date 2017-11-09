@@ -66,12 +66,12 @@ public class MainMenu extends AppCompatActivity {
 
         quickMathLayout.animate()
                 .translationXBy(-1000.0f)
-                .setDuration(700)
+                .setDuration(800)
                 .start();
 
         trueFalseLayout.animate()
                 .translationXBy(-1000.0f)
-                .setDuration(1000)
+                .setDuration(1200)
                 .start();
 
         setResult(Activity.RESULT_OK);

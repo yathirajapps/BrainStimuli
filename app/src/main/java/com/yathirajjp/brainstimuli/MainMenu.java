@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class MainMenu extends AppCompatActivity {
-    TextView quickMathHighScoreText, trueFalseHighScoreText;
-    int quickMathHighScore = 0, trueFalseHighScore = 0;
+    TextView quickMathHighScoreText, trueFalseHighScoreText, game2048HighScoreText;
+    int quickMathHighScore = 0, trueFalseHighScore = 0, game2048HighScore;
 
     public void showQuickMath(View view) {
 
@@ -33,6 +35,14 @@ public class MainMenu extends AppCompatActivity {
         Intent trueFalseIntent = new Intent(getApplicationContext(), TrueFalse.class);
         trueFalseIntent.putExtra("TrueFalseHighScore", quickMathHighScore);
         startActivity(trueFalseIntent);
+        finish();
+    }
+
+    public void showGame2048(View view){
+        Log.i("Info", "Clicked on Relative Layout of Game 2048");
+        Intent game2048Intent = new Intent(getApplicationContext(), Game2048.class);
+        game2048Intent.putExtra("Game2048HighScore", game2048HighScore);
+        startActivity(game2048Intent);
         finish();
     }
 
@@ -60,18 +70,25 @@ public class MainMenu extends AppCompatActivity {
 
         RelativeLayout quickMathLayout = (RelativeLayout)findViewById(R.id.quickMathRelLayout);
         RelativeLayout trueFalseLayout = (RelativeLayout)findViewById(R.id.trueFalseRelLayout);
+        RelativeLayout game2048Layout = (RelativeLayout)findViewById(R.id.game2048RelLayout);
 
-        quickMathLayout.setTranslationX(1000.0f);
-        trueFalseLayout.setTranslationX(1000.0f);
+        quickMathLayout.setTranslationX(2000.0f);
+        trueFalseLayout.setTranslationX(2000.0f);
+        game2048Layout.setTranslationX(2000.0f);
 
         quickMathLayout.animate()
-                .translationXBy(-1000.0f)
+                .translationXBy(-2000.0f)
                 .setDuration(800)
                 .start();
 
         trueFalseLayout.animate()
-                .translationXBy(-1000.0f)
+                .translationXBy(-2000.0f)
                 .setDuration(1200)
+                .start();
+
+        game2048Layout.animate()
+                .translationXBy(-2000.0f)
+                .setDuration(1600)
                 .start();
 
         setResult(Activity.RESULT_OK);
@@ -79,6 +96,7 @@ public class MainMenu extends AppCompatActivity {
 
         quickMathHighScoreText = (TextView) findViewById(R.id.quickMathScore);
         trueFalseHighScoreText = (TextView) findViewById(R.id.trueFalseScore);
+        game2048HighScoreText = (TextView) findViewById(R.id.game2048Score);
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
 
@@ -87,6 +105,9 @@ public class MainMenu extends AppCompatActivity {
 
         trueFalseHighScore = sharedPreferences.getInt("TrueFalseHighScore", 0);
         trueFalseHighScoreText.setText("High Score: " + Integer.toString(trueFalseHighScore));
+
+        game2048HighScore = sharedPreferences.getInt("Game2048HighScore", 0);
+        game2048HighScoreText.setText("High Score: " + Integer.toString(game2048HighScore));
 
     }
 }

@@ -100,6 +100,51 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/game2048RelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trueFalseRelLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="15dp"
+        android:onClick="showGame2048">
+
+        <TextView
+            android:id="@+id/game2048Score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="2dp"
+            android:background="@color/white"
+            android:gravity="start|center"
+            android:textSize="12sp"
+            android:text="High Score:" />
+
+        <ImageView
+            android:id="@+id/game2048ImageView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/game2048Score"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/game2048_board" />
+
+        <TextView
+            android:id="@+id/textViewGame2048Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game2048ImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Game 2048"
+            android:textSize="13sp"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/ratingLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

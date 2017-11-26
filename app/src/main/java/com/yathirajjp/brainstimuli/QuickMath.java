@@ -24,17 +24,15 @@ import java.util.Random;
 public class QuickMath extends AppCompatActivity {
 
     int minRandom = 0, maxRandom = 25, maxSecondsPerQuestion = 5;
+    int correctAnsLoc, score = 0, highScore = 0;
     Random random = new Random();
     ArrayList<String> answers = new ArrayList<>();
     ArrayList<String> operators = new ArrayList<>();
-    TextView questionView;
-    int correctAnsLoc, score = 0;
+    TextView questionView, scoreText, timerText;
     Button button1, button2, button3, button4;
-    TextView scoreText, timerText;
     CountDownTimer waitTimer;
     SeekBar timerSeekbar;
     SharedPreferences sharedPreferences;
-    int highScore = 0;
 
 
     public int getRandom(int minimum, int maximum) {

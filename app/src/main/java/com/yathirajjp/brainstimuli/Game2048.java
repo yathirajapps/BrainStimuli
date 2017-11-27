@@ -131,7 +131,7 @@ public class Game2048 extends AppCompatActivity {
             gridLayout.setAlpha(0.5f);
             gridLayout.setEnabled(false);
 
-            showCustomDialog("Congratulations, Game Complete!", "Your Score: " + Integer.toString(score));
+            showCustomDialog("Congratulations, You Won!", "Your Score: " + Integer.toString(score));
         }
     }
 
@@ -438,6 +438,7 @@ public class Game2048 extends AppCompatActivity {
 
         customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         customDialog.setCanceledOnTouchOutside(false);
+        customDialog.setCancelable(false);
         customDialog.show();
 
     }

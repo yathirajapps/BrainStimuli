@@ -156,6 +156,7 @@ public class TrueFalse extends AppCompatActivity {
 
         customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         customDialog.setCanceledOnTouchOutside(false);
+        customDialog.setCancelable(false);
         customDialog.show();
 
     }

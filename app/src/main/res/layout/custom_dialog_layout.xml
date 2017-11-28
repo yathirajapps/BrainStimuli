@@ -65,7 +65,7 @@
         android:layout_below="@+id/menuButton"
         android:layout_marginBottom="1dp"
         android:background="@drawable/cust_mes_bg_bottom"
-        android:text="Continue the game?"
+        android:text="Restart the game?"
         android:textColor="@color/appThemeColor"
         android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Menu"

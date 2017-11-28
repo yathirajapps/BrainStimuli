@@ -16,8 +16,8 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 public class MainMenu extends AppCompatActivity {
-    TextView quickMathHighScoreText, trueFalseHighScoreText, game2048HighScoreText;
-    int quickMathHighScore = 0, trueFalseHighScore = 0, game2048HighScore;
+    TextView quickMathHighScoreText, trueFalseHighScoreText, game2048HighScoreText, game2048MovesText;
+    int quickMathHighScore = 0, trueFalseHighScore = 0, game2048HighScore, game2048BestMoves;
 
     public void showQuickMath(View view) {
 
@@ -42,6 +42,7 @@ public class MainMenu extends AppCompatActivity {
         Log.i("Info", "Clicked on Relative Layout of Game 2048");
         Intent game2048Intent = new Intent(getApplicationContext(), Game2048.class);
         game2048Intent.putExtra("Game2048HighScore", game2048HighScore);
+        game2048Intent.putExtra("Game2048BestMoves", game2048BestMoves);
         startActivity(game2048Intent);
         finish();
     }
@@ -97,6 +98,7 @@ public class MainMenu extends AppCompatActivity {
         quickMathHighScoreText = (TextView) findViewById(R.id.quickMathScore);
         trueFalseHighScoreText = (TextView) findViewById(R.id.trueFalseScore);
         game2048HighScoreText = (TextView) findViewById(R.id.game2048Score);
+        game2048MovesText = (TextView)findViewById(R.id.game2048Moves);
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
 
@@ -108,6 +110,8 @@ public class MainMenu extends AppCompatActivity {
 
         game2048HighScore = sharedPreferences.getInt("Game2048HighScore", 0);
         game2048HighScoreText.setText("High Score: " + Integer.toString(game2048HighScore));
+        game2048BestMoves = sharedPreferences.getInt("Game2048BestMoves", 0);
+        game2048MovesText.setText("Moves: " + Integer.toString(game2048BestMoves));
 
     }
 }

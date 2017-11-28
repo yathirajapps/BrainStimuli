@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -23,12 +26,13 @@ import java.util.Random;
 
 public class Game2048 extends AppCompatActivity {
 
-    int[][] gameState, lastGameState, undoGameState;
-    int score, undoScore, highScore;
-    TextView scoreText, highScoreText;
+    int[][] gameState, lastGameState, undoGameState, animateTiles;
+    int score, undoScore, highScore, noOfMoves, bestMoves;
+    TextView scoreText, highScoreText, noOfMovesText;
     SharedPreferences sharedPreferences;
-    boolean isGameComplete;
+    boolean isGameComplete, undoAction;
     GridLayout gridLayout;
+    Animation animation;
 
 
     //This procedure gets the Array value of given position.  Returns -1 in case of invalid position
@@ -112,6 +116,12 @@ public class Game2048 extends AppCompatActivity {
                 imageView = (ImageView)findViewById(imageResId);
 
                 imageView.setImageResource(drawableResId);
+
+                if (!undoAction && animateTiles[i][j] == 1){
+                    //Animate this tile
+                    imageView.startAnimation(animation);
+                }
+
             }
         }
 
@@ -133,16 +143,20 @@ public class Game2048 extends AppCompatActivity {
 
             showCustomDialog("Congratulations, You Won!", "Your Score: " + Integer.toString(score));
         }
-    }
+    } // End of loadTiles
 
 
 
     //This procedure handles the movement of tiles to Right when Swiped right
     public void moveSlidesRight(){
 
+        boolean tileMerged;
+
         for (int i=0; i<4; i++){
             for (int j=3; j>=0; j--){
+                animateTiles[i][j] =0;
                 if (gameState[i][j] != 0){
+                    tileMerged = false;
                     //Check if there is a tile left to it with same number
                     for (int col=j-1; col>=0; col--){
 
@@ -154,6 +168,9 @@ public class Game2048 extends AppCompatActivity {
                             //Merge the same numbered cells
                             gameState[i][j] += gameState[i][j];
                             gameState[i][col] = 0;
+                            //You need to animate this tile
+                            animateTiles[i][j] = 1;
+                            tileMerged = true;
 
                             if (gameState[i][j] == 2048)
                                 isGameComplete = true;
@@ -168,6 +185,11 @@ public class Game2048 extends AppCompatActivity {
                         if (gameState[i][col] == 0){
                             gameState[i][col] = gameState[i][j];
                             gameState[i][j] =0;
+                            if (tileMerged) {
+                                //You need to animate the tile i,col not the i,j
+                                animateTiles[i][col] = 1;
+                                animateTiles[i][j] = 0;
+                            }
 
                             if (gameState[i][col] <=4 && (col - j) > 1)
                                 score++;
@@ -185,9 +207,13 @@ public class Game2048 extends AppCompatActivity {
     //This procedure handles the movement of tiles to Left when Swiped left
     public void moveSlidesLeft(){
 
+        boolean tileMerged;
+
         for (int i=0; i<4; i++){
             for (int j=0; j<4; j++){
+                animateTiles[i][j] =0;
                 if (gameState[i][j] != 0){
+                    tileMerged = false;
                     //Check if there is a tile right to it with same number
                     for (int col=j+1; col<4; col++){
 
@@ -199,6 +225,9 @@ public class Game2048 extends AppCompatActivity {
                             //Merge the same numbered cells
                             gameState[i][j] += gameState[i][j];
                             gameState[i][col] = 0;
+                            //You need to animate this tile
+                            animateTiles[i][j] = 1;
+                            tileMerged = true;
 
                             if (gameState[i][j] == 2048)
                                 isGameComplete = true;
@@ -213,6 +242,11 @@ public class Game2048 extends AppCompatActivity {
                         if (gameState[i][col] == 0){
                             gameState[i][col] = gameState[i][j];
                             gameState[i][j] =0;
+                            if (tileMerged) {
+                                //You need to animate the tile i,col not the i,j
+                                animateTiles[i][col] = 1;
+                                animateTiles[i][j] = 0;
+                            }
 
                             if (gameState[i][col] <=4 && (j - col) > 1)
                                 score++;
@@ -230,9 +264,13 @@ public class Game2048 extends AppCompatActivity {
     //This procedure handles the movement of tiles to Top when Swiped Up
     public void moveSlidesUp(){
 
+        boolean tileMerged;
+
         for (int j=0; j<4; j++){
             for (int i=0; i<4; i++){
+                animateTiles[i][j] =0;
                 if (gameState[i][j] != 0){
+                    tileMerged = false;
                     //Check if there is a tile below it with same number
                     for (int row=i+1; row<4; row++){
 
@@ -244,6 +282,9 @@ public class Game2048 extends AppCompatActivity {
                             //Merge the same numbered cells
                             gameState[i][j] += gameState[i][j];
                             gameState[row][j] = 0;
+                            //You need to animate this tile
+                            animateTiles[i][j] = 1;
+                            tileMerged=true;
 
                             if (gameState[i][j] == 2048)
                                 isGameComplete = true;
@@ -258,6 +299,11 @@ public class Game2048 extends AppCompatActivity {
                         if (gameState[row][j] == 0){
                             gameState[row][j] = gameState[i][j];
                             gameState[i][j] =0;
+                            if (tileMerged) {
+                                //You need to animate the tile row,j not the i,j
+                                animateTiles[row][j] = 1;
+                                animateTiles[i][j] = 0;
+                            }
 
                             if (gameState[row][j] <=4 && (i-row) > 1)
                                 score++;
@@ -276,9 +322,13 @@ public class Game2048 extends AppCompatActivity {
     //This procedure handles the movement of tiles to Bottom when Swiped down
     public void moveSlidesDown(){
 
+        boolean tileMerged;
+
         for (int j=0; j<4; j++){
             for (int i=3; i>=0; i--){
+                animateTiles[i][j] =0;
                 if (gameState[i][j] != 0){
+                    tileMerged = false;
                     //Check if there is a tile above it with same number
                     for (int row=i-1; row>=0; row--){
 
@@ -290,6 +340,9 @@ public class Game2048 extends AppCompatActivity {
                             //Merge the same numbered cells
                             gameState[i][j] += gameState[i][j];
                             gameState[row][j] = 0;
+                            tileMerged = true;
+                            //You need to animate this tile
+                            animateTiles[i][j] = 1;
 
                             if (gameState[i][j] == 2048)
                                 isGameComplete = true;
@@ -304,6 +357,11 @@ public class Game2048 extends AppCompatActivity {
                         if (gameState[row][j] == 0){
                             gameState[row][j] = gameState[i][j];
                             gameState[i][j] =0;
+                            if (tileMerged) {
+                                //You need to animate the tile row,j not the i,j
+                                animateTiles[row][j] = 1;
+                                animateTiles[i][j] = 0;
+                            }
 
                             if (gameState[row][j] <=4 && (row-i) > 1)
                                 score++;
@@ -336,27 +394,40 @@ public class Game2048 extends AppCompatActivity {
 
     // This procedure will undo the last move
     public void undoGame(View view){
-        Log.i("gameState:BeforeUndo", Arrays.deepToString(gameState));
-        gameState = deepCopy2DArray(undoGameState);
-        Log.i("gameState:AfterUndo", Arrays.deepToString(gameState));
-        loadTiles();
+        if (!Arrays.deepEquals(gameState, undoGameState)) {
+            undoAction = true;
 
-        if (highScore == score){
-            highScore = undoScore;
-            highScoreText.setText(Integer.toString(highScore));
+            //Copy the gameState from undoGameState
+            gameState = deepCopy2DArray(undoGameState);
+
+            loadTiles();
+
+            if (highScore == score) {
+                highScore = undoScore;
+                highScoreText.setText(Integer.toString(highScore));
+            }
+            score = undoScore;
+            scoreText.setText(Integer.toString(score));
+
+            noOfMoves++;
+            noOfMovesText.setText(Integer.toString(noOfMoves));
+
+            undoAction = false;
         }
-        score = undoScore;
-        scoreText.setText(Integer.toString(score));
     }
 
 
     public void startGame(){
 
         isGameComplete = false;
+        noOfMoves = 0;
+        noOfMovesText.setText(Integer.toString(noOfMoves));
+
         //Initialize the game array
         for (int i=0; i < 4; i++){
             for (int j=0; j < 4; j++){
                 gameState[i][j] = 0;
+                animateTiles[i][j] = 0;
             }
         }
 
@@ -397,6 +468,9 @@ public class Game2048 extends AppCompatActivity {
 
         headerTextView.setText(pHeading);
         yourScoreTextView.setText(pScore);
+        if (! pHeading.equals("Game Over!")) {
+            continueButton.setText("Continue the game?");
+        }
         //Method for Menu button click
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -451,16 +525,25 @@ public class Game2048 extends AppCompatActivity {
 
         scoreText = (TextView)findViewById(R.id.textViewCurrScoreValue);
         highScoreText = (TextView)findViewById(R.id.textViewHSValue);
+        noOfMovesText = (TextView)findViewById(R.id.textViewNoOfMoves);
         gridLayout = (GridLayout)findViewById(R.id.gridBoard4x4);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
 
         gameState = new int[4][4];
         lastGameState = new int[4][4];
         undoGameState = new int[4][4];
+        animateTiles = new int[4][4];
+
+        // Set the animation settings
+        animation = new ScaleAnimation(1f, 1.2f, 1f, 1.2f);
+        animation.setDuration(100);
+        animation.setRepeatCount(0);
+
 
         Intent intent = getIntent();
         highScore = intent.getIntExtra("Game2048HighScore", 0);
         highScoreText.setText(Integer.toString(highScore));
+        bestMoves = intent.getIntExtra("Game2048BestMoves", 0);
 
         startGame();
 
@@ -477,6 +560,8 @@ public class Game2048 extends AppCompatActivity {
                 moveSlidesDown();
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
+                    noOfMoves++;
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
                     generateRandNum(1);
@@ -486,6 +571,7 @@ public class Game2048 extends AppCompatActivity {
                         highScore = score;
                         highScoreText.setText(Integer.toString(highScore));
                         sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
+                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
                     }
                 }
 
@@ -500,6 +586,8 @@ public class Game2048 extends AppCompatActivity {
                 moveSlidesUp();
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
+                    noOfMoves++;
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
                     generateRandNum(1);
@@ -509,6 +597,7 @@ public class Game2048 extends AppCompatActivity {
                         highScore = score;
                         highScoreText.setText(Integer.toString(highScore));
                         sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
+                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
                     }
                 }
 
@@ -523,6 +612,8 @@ public class Game2048 extends AppCompatActivity {
                 moveSlidesLeft();
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
+                    noOfMoves++;
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
                     generateRandNum(1);
@@ -532,6 +623,7 @@ public class Game2048 extends AppCompatActivity {
                         highScore = score;
                         highScoreText.setText(Integer.toString(highScore));
                         sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
+                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
                     }
                 }
             }
@@ -545,6 +637,8 @@ public class Game2048 extends AppCompatActivity {
                 moveSlidesRight();
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
+                    noOfMoves++;
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
                     generateRandNum(1);
@@ -554,6 +648,7 @@ public class Game2048 extends AppCompatActivity {
                         highScore = score;
                         highScoreText.setText(Integer.toString(highScore));
                         sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
+                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
                     }
                 }
             }

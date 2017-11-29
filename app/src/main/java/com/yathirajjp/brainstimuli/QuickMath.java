@@ -12,7 +12,10 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -28,7 +31,7 @@ public class QuickMath extends AppCompatActivity {
     Random random = new Random();
     ArrayList<String> answers = new ArrayList<>();
     ArrayList<String> operators = new ArrayList<>();
-    TextView questionView, scoreText, timerText;
+    TextView questionView, scoreText, timerText, highScoreMsgTextView;
     Button button1, button2, button3, button4;
     CountDownTimer waitTimer;
     SeekBar timerSeekbar;
@@ -217,6 +220,7 @@ public class QuickMath extends AppCompatActivity {
                 //Reset the score
                 score = 0;
                 scoreText.setText(Integer.toString(score));
+                highScoreMsgTextView.setVisibility(View.INVISIBLE);
                 startQuickMath();
 
             }
@@ -249,6 +253,19 @@ public class QuickMath extends AppCompatActivity {
 
                 sharedPreferences.edit().putInt("QuickMathHighScore", score).apply();
                 highScore = score;
+
+                if (highScoreMsgTextView.getVisibility() == View.INVISIBLE){
+                    highScoreMsgTextView.setVisibility(View.VISIBLE);
+
+                    int[] originalPos = new int[2];
+                    highScoreMsgTextView.getLocationOnScreen(originalPos);
+
+                    Animation animation = new TranslateAnimation(originalPos[0], originalPos[0], 0, 20);
+                    animation.setDuration(1000);
+                    animation.setRepeatCount(0);
+
+                    highScoreMsgTextView.startAnimation(animation);
+                }
             }
 
             startQuickMath();
@@ -258,8 +275,11 @@ public class QuickMath extends AppCompatActivity {
             waitTimer.cancel();
 
             //Call the custom dialog here
-            showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-
+            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+            } else {
+                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+            }
 
         }
 
@@ -292,7 +312,11 @@ public class QuickMath extends AppCompatActivity {
                 timerSeekbar.setProgress(0);
 
                 //Call the custom dialog here
-                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+                } else {
+                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+                }
             }
         }.start();
 
@@ -313,6 +337,7 @@ public class QuickMath extends AppCompatActivity {
         scoreText = (TextView)findViewById(R.id.scoreTextView);
         timerText = (TextView)findViewById(R.id.timerTextView);
         timerSeekbar = (SeekBar)findViewById(R.id.timerSeekbar);
+        highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
 
         timerSeekbar.setMax(maxSecondsPerQuestion * 1000);
@@ -347,5 +372,17 @@ public class QuickMath extends AppCompatActivity {
         Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
         startActivity(mainMenuIntent);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+
+        return false;
+//        return super.onOptionsItemSelected(item);
     }
 }

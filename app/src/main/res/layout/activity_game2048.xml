@@ -6,13 +6,119 @@
     android:layout_height="match_parent"
     tools:context=".Game2048">
 
+    <TextView
+        android:id="@+id/textViewHighScoreMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:visibility="invisible"
+        android:background="@color/appThemeColor"
+        android:fontFamily="@font/baumans"
+        android:text="Congratulations! you got a new high score"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/textViewCurrScore"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/round_corner_rectangle"
+        android:fontFamily="@font/baumans"
+        android:text="Score"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewCurrScoreValue"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textViewCurrScore"
+        android:layout_below="@+id/textViewCurrScore"
+        android:background="@drawable/round_corner_rectangle_bottom"
+        android:fontFamily="@font/baumans"
+        android:paddingTop="5dp"
+        android:text="9999999"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textViewMoves"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textViewCurrScore"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/textViewCurrScore"
+        android:background="@drawable/round_corner_rectangle"
+        android:fontFamily="@font/baumans"
+        android:text="Moves"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewNoOfMoves"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textViewMoves"
+        android:layout_below="@+id/textViewMoves"
+        android:background="@drawable/round_corner_rectangle_bottom"
+        android:fontFamily="@font/baumans"
+        android:paddingTop="5dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/textViewHighScore"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/round_corner_rectangle"
+        android:fontFamily="@font/baumans"
+        android:text="High Score"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewHSValue"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textViewHighScore"
+        android:layout_below="@+id/textViewHighScore"
+        android:background="@drawable/round_corner_rectangle_bottom"
+        android:fontFamily="@font/baumans"
+        android:paddingTop="5dp"
+        android:text="9999999"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
     <GridLayout
         android:id="@+id/gridBoard4x4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="70dp"
         android:background="#97f2f2"
         android:columnCount="4"
         android:padding="5dp"
@@ -185,98 +291,9 @@
         android:layout_height="40dp"
         android:layout_above="@+id/gridBoard4x4"
         android:layout_alignStart="@+id/gridBoard4x4"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="25dp"
         android:onClick="undoGame"
         app:srcCompat="@drawable/undobutton2" />
-
-    <TextView
-        android:id="@+id/textViewHighScore"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/round_corner_rectangle"
-        android:fontFamily="@font/baumans"
-        android:text="High Score"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewHSValue"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textViewHighScore"
-        android:layout_below="@+id/textViewHighScore"
-        android:background="@drawable/round_corner_rectangle_bottom"
-        android:fontFamily="@font/baumans"
-        android:paddingTop="5dp"
-        android:text="9999999"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/textViewCurrScore"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/round_corner_rectangle"
-        android:fontFamily="@font/baumans"
-        android:text="Score"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewCurrScoreValue"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textViewCurrScore"
-        android:layout_below="@+id/textViewCurrScore"
-        android:background="@drawable/round_corner_rectangle_bottom"
-        android:fontFamily="@font/baumans"
-        android:paddingTop="5dp"
-        android:text="9999999"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/textViewMoves"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textViewCurrScore"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/textViewCurrScore"
-        android:background="@drawable/round_corner_rectangle"
-        android:fontFamily="@font/baumans"
-        android:text="Moves"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewNoOfMoves"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textViewMoves"
-        android:layout_below="@+id/textViewMoves"
-        android:background="@drawable/round_corner_rectangle_bottom"
-        android:fontFamily="@font/baumans"
-        android:paddingTop="5dp"
-        android:text="0"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
 
     <Button
         android:id="@+id/buttonRestart"
@@ -291,6 +308,5 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp" />
-
 
 </RelativeLayout>

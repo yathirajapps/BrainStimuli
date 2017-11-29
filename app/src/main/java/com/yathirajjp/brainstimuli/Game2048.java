@@ -8,10 +8,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -28,7 +30,7 @@ public class Game2048 extends AppCompatActivity {
 
     int[][] gameState, lastGameState, undoGameState, animateTiles;
     int score, undoScore, highScore, noOfMoves, bestMoves;
-    TextView scoreText, highScoreText, noOfMovesText;
+    TextView scoreText, highScoreText, noOfMovesText, highScoreMsgTextView;
     SharedPreferences sharedPreferences;
     boolean isGameComplete, undoAction;
     GridLayout gridLayout;
@@ -131,7 +133,12 @@ public class Game2048 extends AppCompatActivity {
             gridLayout.setAlpha(0.5f);
             gridLayout.setEnabled(false);
 
-            showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+            // Show the custom dialog
+            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+            } else {
+                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+            }
 
         }
 
@@ -141,7 +148,12 @@ public class Game2048 extends AppCompatActivity {
             gridLayout.setAlpha(0.5f);
             gridLayout.setEnabled(false);
 
-            showCustomDialog("Congratulations, You Won!", "Your Score: " + Integer.toString(score));
+            // Show the custom dialog
+            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                showCustomDialog("Congratulations, You Won!", "New High Score: " + Integer.toString(score));
+            } else {
+                showCustomDialog("Congratulations, You Won!", "Your Score: " + Integer.toString(score));
+            }
         }
     } // End of loadTiles
 
@@ -496,6 +508,7 @@ public class Game2048 extends AppCompatActivity {
                 if (pHeading.equals("Game Over!")) {
                     score = 0;
                     scoreText.setText(Integer.toString(score));
+                    highScoreMsgTextView.setVisibility(View.INVISIBLE);
                     startGame();
                 }
 
@@ -517,6 +530,25 @@ public class Game2048 extends AppCompatActivity {
 
     }
 
+    public void applyHighScore(){
+        highScore = score;
+        highScoreText.setText(Integer.toString(highScore));
+        sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
+        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
+
+        if (highScoreMsgTextView.getVisibility() == View.INVISIBLE){
+            highScoreMsgTextView.setVisibility(View.VISIBLE);
+
+            int[] originalPos = new int[2];
+            highScoreMsgTextView.getLocationOnScreen(originalPos);
+
+            Animation animation = new TranslateAnimation(originalPos[0], originalPos[0], 0, 20);
+            animation.setDuration(1000);
+            animation.setRepeatCount(0);
+
+            highScoreMsgTextView.startAnimation(animation);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -527,6 +559,7 @@ public class Game2048 extends AppCompatActivity {
         highScoreText = (TextView)findViewById(R.id.textViewHSValue);
         noOfMovesText = (TextView)findViewById(R.id.textViewNoOfMoves);
         gridLayout = (GridLayout)findViewById(R.id.gridBoard4x4);
+        highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
 
         gameState = new int[4][4];
@@ -568,10 +601,7 @@ public class Game2048 extends AppCompatActivity {
                     loadTiles();
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
-                        highScore = score;
-                        highScoreText.setText(Integer.toString(highScore));
-                        sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
-                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
+                        applyHighScore();
                     }
                 }
 
@@ -594,10 +624,7 @@ public class Game2048 extends AppCompatActivity {
                     loadTiles();
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
-                        highScore = score;
-                        highScoreText.setText(Integer.toString(highScore));
-                        sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
-                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
+                        applyHighScore();
                     }
                 }
 
@@ -620,10 +647,7 @@ public class Game2048 extends AppCompatActivity {
                     loadTiles();
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
-                        highScore = score;
-                        highScoreText.setText(Integer.toString(highScore));
-                        sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
-                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
+                        applyHighScore();
                     }
                 }
             }
@@ -645,10 +669,7 @@ public class Game2048 extends AppCompatActivity {
                     loadTiles();
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
-                        highScore = score;
-                        highScoreText.setText(Integer.toString(highScore));
-                        sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
-                        sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
+                        applyHighScore();
                     }
                 }
             }
@@ -662,5 +683,16 @@ public class Game2048 extends AppCompatActivity {
         Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
         startActivity(mainMenuIntent);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+
+        return false;
     }
 }

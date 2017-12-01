@@ -82,9 +82,9 @@
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
+        android:layout_above="@id/answersGrid"
+        android:layout_marginBottom="40dp"
         android:fontFamily="@font/baumans"
         android:text="TextView"
         android:textColor="@android:color/darker_gray"
@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="10dp"
+        android:layout_marginBottom="70dp"
         android:visibility="visible"
         app:columnCount="2"
         app:rowCount="2"
@@ -184,6 +184,15 @@
             app:layout_rowWeight="1" />
 
     </android.support.v7.widget.GridLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="@string/ad_banner_bottom_unit_id"/>
 
 
 </RelativeLayout>

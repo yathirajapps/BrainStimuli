@@ -112,5 +112,14 @@
         android:onClick="checkAnswer"
         app:srcCompat="@drawable/thumb_down_red" />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="@string/ad_banner_bottom_unit_id"/>
+
 
 </RelativeLayout>

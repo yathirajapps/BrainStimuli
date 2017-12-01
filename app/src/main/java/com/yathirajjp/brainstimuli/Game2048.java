@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +22,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -27,6 +35,11 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Game2048 extends AppCompatActivity {
+
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
+    private Handler mAdHandler;
+    private Runnable mDisplayAd;
 
     int[][] gameState, lastGameState, undoGameState, animateTiles;
     int score, undoScore, highScore, noOfMoves, bestMoves;
@@ -402,7 +415,19 @@ public class Game2048 extends AppCompatActivity {
         return result;
     }
 
+    public void loadAd(){
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("7378D97884419E089614BB536911AA73")
+                .build();
 
+        mInterstitialAd.loadAd(adRequest);
+    }
+
+    public void displayInterstitialAd(){
+
+
+        mAdHandler.postDelayed(mDisplayAd, 1);
+    }
 
     // This procedure will undo the last move
     public void undoGame(View view){
@@ -426,6 +451,10 @@ public class Game2048 extends AppCompatActivity {
 
             undoAction = false;
         }
+
+        Log.i("Game2048", "Calling the displayInterstitialAd");
+        displayInterstitialAd();
+
     }
 
 
@@ -554,6 +583,45 @@ public class Game2048 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game2048);
+
+        //Initialize the mobile ads SDK
+        MobileAds.initialize(Game2048.this, "@string/ad_app_id");
+        mAdView = findViewById(R.id.adView);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)  // AdRequest.DEVICE_ID_EMULATOR)    // Test Device: 7378D97884419E089614BB536911AA73
+                .build();
+
+        //Start loading the add in the background
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(Game2048.this);
+        mInterstitialAd.setAdUnitId("@string/ad_interstitial_unit_id");
+        Log.i("AdUnitID", mInterstitialAd.getAdUnitId());
+        mInterstitialAd.setAdListener(new AdListener(){
+
+            @Override
+            public void onAdClosed() {
+                loadAd();
+            }
+        });
+
+        mAdHandler = new Handler(Looper.getMainLooper());
+        mDisplayAd = new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mInterstitialAd.isLoaded()){
+                            mInterstitialAd.show();
+                        }
+                    }
+                });
+            }
+        };
+        loadAd();
+
 
         scoreText = (TextView)findViewById(R.id.textViewCurrScoreValue);
         highScoreText = (TextView)findViewById(R.id.textViewHSValue);
@@ -695,4 +763,30 @@ public class Game2048 extends AppCompatActivity {
 
         return false;
     }
+
+
+    @Override
+    protected void onPause() {
+        if (mAdView != null){
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (mAdView != null){
+            mAdView.resume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+
 }

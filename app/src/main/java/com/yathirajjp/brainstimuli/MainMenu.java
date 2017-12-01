@@ -13,9 +13,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import org.w3c.dom.Text;
 
 public class MainMenu extends AppCompatActivity {
+
     TextView quickMathHighScoreText, trueFalseHighScoreText, game2048HighScoreText, game2048MovesText;
     int quickMathHighScore = 0, trueFalseHighScore = 0, game2048HighScore, game2048BestMoves;
 
@@ -68,6 +72,7 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
 
         RelativeLayout quickMathLayout = (RelativeLayout)findViewById(R.id.quickMathRelLayout);
         RelativeLayout trueFalseLayout = (RelativeLayout)findViewById(R.id.trueFalseRelLayout);

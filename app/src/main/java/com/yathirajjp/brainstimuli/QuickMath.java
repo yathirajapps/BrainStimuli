@@ -21,10 +21,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class QuickMath extends AppCompatActivity {
+
+    private AdView mAdView;
 
     int minRandom = 0, maxRandom = 25, maxSecondsPerQuestion = 5;
     int correctAnsLoc, score = 0, highScore = 0;
@@ -328,6 +334,16 @@ public class QuickMath extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quick_math);
 
+        //Initialize the mobile ads SDK
+        MobileAds.initialize(QuickMath.this, "@string/ad_app_id");
+        mAdView = findViewById(R.id.adView);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)  //  Test Device: "7378D97884419E089614BB536911AA73"
+                .build();
+
+        //Start loading the add in the background
+        mAdView.loadAd(adRequest);
 
         questionView = (TextView) findViewById(R.id.questionTextView);
         button1 = (Button) findViewById(R.id.button1);
@@ -384,5 +400,29 @@ public class QuickMath extends AppCompatActivity {
 
         return false;
 //        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        if (mAdView != null){
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (mAdView != null){
+            mAdView.resume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

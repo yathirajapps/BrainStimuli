@@ -20,11 +20,16 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class TrueFalse extends AppCompatActivity {
 
+    private AdView mAdView;
 
     int minRandom = 0, maxRandom = 25, maxSecondsPerQuestion = 5;
     Random random = new Random();
@@ -251,6 +256,16 @@ public class TrueFalse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_true_false);
 
+        //Initialize the mobile ads SDK
+        MobileAds.initialize(TrueFalse.this, "@string/ad_app_id");
+        mAdView = findViewById(R.id.adView);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        //Start loading the add in the background
+        mAdView.loadAd(adRequest);
 
         questionView = (TextView) findViewById(R.id.questionTextView);
         scoreText = (TextView)findViewById(R.id.scoreTextView);
@@ -296,5 +311,29 @@ public class TrueFalse extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    @Override
+    protected void onPause() {
+        if (mAdView != null){
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (mAdView != null){
+            mAdView.resume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

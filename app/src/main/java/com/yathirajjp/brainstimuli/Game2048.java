@@ -47,7 +47,7 @@ public class Game2048 extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     boolean isGameComplete, undoAction;
     GridLayout gridLayout;
-    Animation animation;
+    Animation merge_tile_animation, new_tile_animation;
 
 
     //This procedure gets the Array value of given position.  Returns -1 in case of invalid position
@@ -114,6 +114,7 @@ public class Game2048 extends AppCompatActivity {
             randNum = (random.nextInt(num) + 1) * 2;
 
             gameState[i][j] = randNum;
+            animateTiles[i][j] = 2;
         }
     }
 
@@ -132,10 +133,13 @@ public class Game2048 extends AppCompatActivity {
 
                 imageView.setImageResource(drawableResId);
 
-                if (!undoAction && animateTiles[i][j] == 1){
+                if (!undoAction && animateTiles[i][j] == 1) {
                     //Animate this tile
-                    imageView.startAnimation(animation);
-                }
+                    imageView.startAnimation(merge_tile_animation);
+
+                }else if (animateTiles[i][j] == 2)
+                        imageView.startAnimation(new_tile_animation);
+
 
             }
         }
@@ -415,22 +419,44 @@ public class Game2048 extends AppCompatActivity {
         return result;
     }
 
+
+
     public void loadAd(){
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("7378D97884419E089614BB536911AA73")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//                .addTestDevice("7378D97884419E089614BB536911AA73")
                 .build();
 
-        mInterstitialAd.loadAd(adRequest);
+//        mInterstitialAd.loadAd(adRequest);
+
+        Log.i("AdUnitID", "Loading the Interstitial Ad");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
+
 
     public void displayInterstitialAd(){
 
+        if (mInterstitialAd.isLoaded())
+            mInterstitialAd.show();
+        else
+            Log.i("AdUnitID", "Interstitial Ad not loaded yet");
+//        mAdHandler.postDelayed(mDisplayAd, 1);
 
-        mAdHandler.postDelayed(mDisplayAd, 1);
+        loadAd();
     }
+
+
 
     // This procedure will undo the last move
     public void undoGame(View view){
+
+        // No animation for Undo action
+        for (int i=0; i < 4; i++){
+            for (int j=0; j < 4; j++){
+                animateTiles[i][j] = 0;
+            }
+        }
+
         if (!Arrays.deepEquals(gameState, undoGameState)) {
             undoAction = true;
 
@@ -585,7 +611,8 @@ public class Game2048 extends AppCompatActivity {
         setContentView(R.layout.activity_game2048);
 
         //Initialize the mobile ads SDK
-        MobileAds.initialize(Game2048.this, "@string/ad_app_id");
+//        MobileAds.initialize(Game2048.this, "@string/ad_app_id");
+        MobileAds.initialize(Game2048.this, String.valueOf(R.string.ad_app_id));
         mAdView = findViewById(R.id.adView);
 
         AdRequest adRequest = new AdRequest.Builder()
@@ -596,7 +623,7 @@ public class Game2048 extends AppCompatActivity {
         mAdView.loadAd(adRequest);
 
         mInterstitialAd = new InterstitialAd(Game2048.this);
-        mInterstitialAd.setAdUnitId("@string/ad_interstitial_unit_id");
+        mInterstitialAd.setAdUnitId(String.valueOf(R.string.ad_interstitial_unit_id));
         Log.i("AdUnitID", mInterstitialAd.getAdUnitId());
         mInterstitialAd.setAdListener(new AdListener(){
 
@@ -606,20 +633,21 @@ public class Game2048 extends AppCompatActivity {
             }
         });
 
-        mAdHandler = new Handler(Looper.getMainLooper());
-        mDisplayAd = new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mInterstitialAd.isLoaded()){
-                            mInterstitialAd.show();
-                        }
-                    }
-                });
-            }
-        };
+//        mAdHandler = new Handler(Looper.getMainLooper());
+//        mDisplayAd = new Runnable() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (mInterstitialAd.isLoaded()){
+//                            Log.i("AdUnitID", "Interstitial Ad Unit is Loaded");
+//                            mInterstitialAd.show();
+//                        }
+//                    }
+//                });
+//            }
+//        };
         loadAd();
 
 
@@ -635,10 +663,15 @@ public class Game2048 extends AppCompatActivity {
         undoGameState = new int[4][4];
         animateTiles = new int[4][4];
 
-        // Set the animation settings
-        animation = new ScaleAnimation(1f, 1.2f, 1f, 1.2f);
-        animation.setDuration(100);
-        animation.setRepeatCount(0);
+        // Set the animation settings for Merged tiles
+        merge_tile_animation = new ScaleAnimation(1f, 1.2f, 1f, 1.2f);
+        merge_tile_animation.setDuration(100);
+        merge_tile_animation.setRepeatCount(0);
+
+        // Set the animation settings for New tile
+        new_tile_animation = new ScaleAnimation(0f, 1f, 0f, 1f);
+        new_tile_animation.setDuration(200);
+        new_tile_animation.setRepeatCount(0);
 
 
         Intent intent = getIntent();
@@ -665,8 +698,13 @@ public class Game2048 extends AppCompatActivity {
                     noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-                    generateRandNum(1);
+//                    generateRandNum(1);
+//                    loadTiles();
                     loadTiles();
+                    generateRandNum(1);
+                    undoAction = true;   // Setting this flag just not to animate the merged cells again
+                    loadTiles();
+                    undoAction = false;
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
@@ -688,8 +726,13 @@ public class Game2048 extends AppCompatActivity {
                     noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-                    generateRandNum(1);
+//                    generateRandNum(1);
+//                    loadTiles();
                     loadTiles();
+                    generateRandNum(1);
+                    undoAction = true;   // Setting this flag just not to animate the merged cells again
+                    loadTiles();
+                    undoAction = false;
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
@@ -711,8 +754,13 @@ public class Game2048 extends AppCompatActivity {
                     noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-                    generateRandNum(1);
+//                    generateRandNum(1);
+//                    loadTiles();
                     loadTiles();
+                    generateRandNum(1);
+                    undoAction = true;   // Setting this flag just not to animate the merged cells again
+                    loadTiles();
+                    undoAction = false;
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
@@ -733,8 +781,13 @@ public class Game2048 extends AppCompatActivity {
                     noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-                    generateRandNum(1);
+//                    generateRandNum(1);
+//                    loadTiles();
                     loadTiles();
+                    generateRandNum(1);
+                    undoAction = true;   // Setting this flag just not to animate the merged cells again
+                    loadTiles();
+                    undoAction = false;
                     scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();

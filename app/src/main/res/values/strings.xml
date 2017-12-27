@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Brain Stimuli</string>
     <string name="ad_app_id">ca-app-pub-2621927931405541/1492518680</string>
-    <string name="ad_banner_bottom_unit_id">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="ad_interstitial_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="ad_banner_bottom_unit_id">ca-app-pub-2621927931405541/1492518680</string>
+    <string name="ad_interstitial_unit_id">ca-app-pub-2621927931405541/8438992993</string>
     <string name="test_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
     <string name="banner_bottom">ca-app-pub-2621927931405541/1492518680</string>
     <string name="interstitial_ad">ca-app-pub-2621927931405541/8438992993</string>

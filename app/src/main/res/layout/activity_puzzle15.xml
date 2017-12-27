@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:padding="5dp"
         android:visibility="invisible"
         android:background="@color/appThemeColor"
@@ -21,58 +22,115 @@
         android:textColor="@color/white"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/textViewCurrScoreValue"
+    <GridLayout
+        android:id="@+id/currScoreGrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textViewNoOfMoves"
-        android:layout_toStartOf="@id/textViewNoOfMoves"
-        android:layout_toLeftOf="@+id/textViewNoOfMoves"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/round_corner_rectangle"
-        android:fontFamily="@font/baumans"
-        android:padding="5dp"
-        android:text="Score\n9999999"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/textViewNoOfMoves"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textViewHSValue"
-        android:layout_toStartOf="@id/textViewHSValue"
-        android:layout_toLeftOf="@+id/textViewHSValue"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/round_corner_rectangle"
-        android:fontFamily="@font/baumans"
-        android:padding="5dp"
-        android:text="Moves\n0"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-
-    <TextView
-        android:id="@+id/textViewHSValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/round_corner_rectangle"
-        android:fontFamily="@font/baumans"
-        android:padding="5dp"
-        android:text="High Score\n9999999"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:layout_marginTop="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"  >
+
+        <TextView
+            android:id="@+id/currResultLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_row="0"
+            android:text="Current Result"
+            android:textAlignment="center"
+            android:textColor="@color/appThemeColor"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewCurrScoreValue"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_margin="2dp"
+            android:background="@drawable/round_corner_rectangle"
+            android:fontFamily="@font/baumans"
+            android:padding="5dp"
+            android:text="Time\n00:00:00.000"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textViewNoOfMoves"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_margin="2dp"
+            android:background="@drawable/round_corner_rectangle"
+            android:fontFamily="@font/baumans"
+            android:padding="5dp"
+            android:text="Moves\n000"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/personalBestGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp" >
+
+        <TextView
+            android:id="@+id/bestResultLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_row="0"
+            android:text="Personal Best"
+            android:textAlignment="center"
+            android:textColor="@color/appThemeColor"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewHSValue"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_margin="2dp"
+            android:background="@drawable/round_corner_rectangle"
+            android:fontFamily="@font/baumans"
+            android:padding="5dp"
+            android:text="Time\n00:00:00.000"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textViewBestMoves"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_gravity="fill"
+            android:layout_margin="2dp"
+            android:background="@drawable/round_corner_rectangle"
+            android:fontFamily="@font/baumans"
+            android:padding="5dp"
+            android:text="Moves\n000"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </GridLayout>
 
     <GridLayout
         android:id="@+id/gridBoard4x4"
@@ -80,7 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="70dp"
         android:background="#97f2f2"
         android:columnCount="4"
         android:padding="5dp"
@@ -90,173 +148,162 @@
             android:id="@+id/image00"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="0"
             app:layout_gravity="fill"
             app:layout_row="0"
+            android:tag="00"
             app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image01"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="1"
             app:layout_gravity="fill"
             app:layout_row="0"
+            android:tag="01"
             app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image02"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="2"
             app:layout_gravity="fill"
             app:layout_row="0"
+            android:tag="02"
             app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image03"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="3"
             app:layout_gravity="fill"
             app:layout_row="0"
-            app:srcCompat="@drawable/tile2" />
+            android:tag="03"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image10"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="0"
             app:layout_gravity="fill"
             app:layout_row="1"
+            android:tag="10"
             app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image11"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="1"
             app:layout_gravity="fill"
             app:layout_row="1"
-            app:srcCompat="@drawable/tile4" />
+            android:tag="11"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image12"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="2"
             app:layout_gravity="fill"
             app:layout_row="1"
+            android:tag="12"
             app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image13"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="3"
             app:layout_gravity="fill"
             app:layout_row="1"
-            app:srcCompat="@drawable/tile8" />
+            android:tag="13"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image20"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="0"
             app:layout_gravity="fill"
             app:layout_row="2"
-            app:srcCompat="@drawable/tile16" />
+            android:tag="20"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image21"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="1"
             app:layout_gravity="fill"
             app:layout_row="2"
-            app:srcCompat="@drawable/tile32" />
+            android:tag="21"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image22"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="2"
             app:layout_gravity="fill"
             app:layout_row="2"
-            app:srcCompat="@drawable/tile64" />
+            android:tag="22"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image23"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="3"
             app:layout_gravity="fill"
             app:layout_row="2"
-            app:srcCompat="@drawable/tile128" />
+            android:tag="23"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image30"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="0"
             app:layout_gravity="fill"
             app:layout_row="3"
-            app:srcCompat="@drawable/tile256" />
+            android:tag="30"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image31"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="1"
             app:layout_gravity="fill"
             app:layout_row="3"
-            app:srcCompat="@drawable/tile512" />
+            android:tag="31"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image32"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="2"
             app:layout_gravity="fill"
             app:layout_row="3"
-            app:srcCompat="@drawable/tile1024" />
+            android:tag="32"
+            app:srcCompat="@drawable/tile0" />
 
         <ImageView
             android:id="@+id/image33"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="2dp"
             app:layout_column="3"
             app:layout_gravity="fill"
             app:layout_row="3"
-            app:srcCompat="@drawable/tile2048" />
+            android:tag="33"
+            app:srcCompat="@drawable/tile0" />
     </GridLayout>
-
-    <ImageView
-        android:id="@+id/imageViewUndo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_above="@+id/gridBoard4x4"
-        android:layout_alignStart="@+id/gridBoard4x4"
-        android:layout_alignLeft="@+id/gridBoard4x4"
-        android:layout_marginBottom="10dp"
-        android:onClick="undoGame"
-        app:srcCompat="@drawable/undobutton2" />
 
     <Button
         android:id="@+id/buttonRestart"
@@ -273,6 +320,22 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp" />
+
+    <!--Button
+        android:id="@+id/buttonFinish"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_above="@+id/gridBoard4x4"
+        android:layout_alignStart="@+id/gridBoard4x4"
+        android:layout_alignLeft="@+id/gridBoard4x4"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/round_btn"
+        android:onClick="finishGame"
+        android:fontFamily="@font/baumans"
+        android:text="Complete"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp" /-->
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

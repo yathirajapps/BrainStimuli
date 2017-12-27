@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="50dp"
         android:clickable="false"
@@ -40,8 +41,10 @@
         android:layout_height="30dp"
         android:layout_below="@+id/timerSeekbar"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignBottom="@+id/timerTextView"
         android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         app:srcCompat="@drawable/timer" />
 
     <TextView
@@ -50,7 +53,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/timerSeekbar"
         android:layout_toEndOf="@+id/timerImageView"
+        android:layout_toRightOf="@+id/timerImageView"
         android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:fontFamily="@font/baumans"
         android:text="0:05"
         android:textColor="@color/appThemeColor"
@@ -63,7 +68,9 @@
         android:layout_below="@+id/timerSeekbar"
         android:layout_alignBottom="@+id/timerTextView"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         app:srcCompat="@drawable/thumb_up" />
 
     <TextView
@@ -73,6 +80,7 @@
         android:layout_below="@+id/timerSeekbar"
         android:layout_alignBottom="@+id/timerTextView"
         android:layout_toStartOf="@+id/scoreImageView"
+        android:layout_toLeftOf="@+id/scoreImageView"
         android:textColor="@color/appThemeColor"
         android:fontFamily="@font/baumans"
         android:text="0"

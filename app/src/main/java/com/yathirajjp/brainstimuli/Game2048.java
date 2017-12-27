@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
@@ -27,10 +26,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -436,13 +431,13 @@ public class Game2048 extends AppCompatActivity {
 
     public void displayInterstitialAd(){
 
-        if (mInterstitialAd.isLoaded())
-            mInterstitialAd.show();
-        else
-            Log.i("AdUnitID", "Interstitial Ad not loaded yet");
-//        mAdHandler.postDelayed(mDisplayAd, 1);
+//        if (mInterstitialAd.isLoaded())
+//            mInterstitialAd.show();
+//        else
+//            Log.i("AdUnitID", "Interstitial Ad not loaded yet");
+        mAdHandler.postDelayed(mDisplayAd, 1);
 
-        loadAd();
+//        loadAd();
     }
 
 
@@ -467,19 +462,19 @@ public class Game2048 extends AppCompatActivity {
 
             if (highScore == score) {
                 highScore = undoScore;
-                highScoreText.setText(Integer.toString(highScore));
+                highScoreText.setText("High Score\n" + Integer.toString(highScore));
             }
             score = undoScore;
-            scoreText.setText(Integer.toString(score));
+            scoreText.setText("Score\n" + Integer.toString(score));
 
             noOfMoves++;
-            noOfMovesText.setText(Integer.toString(noOfMoves));
+            noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
 
             undoAction = false;
         }
 
-        Log.i("Game2048", "Calling the displayInterstitialAd");
-        displayInterstitialAd();
+//        Log.i("Game2048", "Calling the displayInterstitialAd");
+//        displayInterstitialAd();
 
     }
 
@@ -488,7 +483,7 @@ public class Game2048 extends AppCompatActivity {
 
         isGameComplete = false;
         noOfMoves = 0;
-        noOfMovesText.setText(Integer.toString(noOfMoves));
+        noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
 
         //Initialize the game array
         for (int i=0; i < 4; i++){
@@ -510,7 +505,7 @@ public class Game2048 extends AppCompatActivity {
 
         score = 0;
         undoScore = 0;
-        scoreText.setText("0");
+        scoreText.setText("Score\n0");
 
     }
 
@@ -562,7 +557,7 @@ public class Game2048 extends AppCompatActivity {
                 //Reset the score
                 if (pHeading.equals("Game Over!")) {
                     score = 0;
-                    scoreText.setText(Integer.toString(score));
+                    scoreText.setText("Score\n" + Integer.toString(score));
                     highScoreMsgTextView.setVisibility(View.INVISIBLE);
                     startGame();
                 }
@@ -578,7 +573,12 @@ public class Game2048 extends AppCompatActivity {
             }
         });
 
-        customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        try {
+            customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        } catch (NullPointerException e){
+            Log.i("CustomDialog", e.getMessage());
+        }
+
         customDialog.setCanceledOnTouchOutside(false);
         customDialog.setCancelable(false);
         customDialog.show();
@@ -587,7 +587,7 @@ public class Game2048 extends AppCompatActivity {
 
     public void applyHighScore(){
         highScore = score;
-        highScoreText.setText(Integer.toString(highScore));
+        highScoreText.setText("High Score\n" + Integer.toString(highScore));
         sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
         sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
 
@@ -610,45 +610,7 @@ public class Game2048 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game2048);
 
-        //Initialize the mobile ads SDK
-//        MobileAds.initialize(Game2048.this, "@string/ad_app_id");
-        MobileAds.initialize(Game2048.this, String.valueOf(R.string.ad_app_id));
-        mAdView = findViewById(R.id.adView);
 
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)  // AdRequest.DEVICE_ID_EMULATOR)    // Test Device: 7378D97884419E089614BB536911AA73
-                .build();
-
-        //Start loading the add in the background
-        mAdView.loadAd(adRequest);
-
-        mInterstitialAd = new InterstitialAd(Game2048.this);
-        mInterstitialAd.setAdUnitId(String.valueOf(R.string.ad_interstitial_unit_id));
-        Log.i("AdUnitID", mInterstitialAd.getAdUnitId());
-        mInterstitialAd.setAdListener(new AdListener(){
-
-            @Override
-            public void onAdClosed() {
-                loadAd();
-            }
-        });
-
-//        mAdHandler = new Handler(Looper.getMainLooper());
-//        mDisplayAd = new Runnable() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (mInterstitialAd.isLoaded()){
-//                            Log.i("AdUnitID", "Interstitial Ad Unit is Loaded");
-//                            mInterstitialAd.show();
-//                        }
-//                    }
-//                });
-//            }
-//        };
-        loadAd();
 
 
         scoreText = (TextView)findViewById(R.id.textViewCurrScoreValue);
@@ -676,13 +638,12 @@ public class Game2048 extends AppCompatActivity {
 
         Intent intent = getIntent();
         highScore = intent.getIntExtra("Game2048HighScore", 0);
-        highScoreText.setText(Integer.toString(highScore));
+        highScoreText.setText("High Score\n" + Integer.toString(highScore));
         bestMoves = intent.getIntExtra("Game2048BestMoves", 0);
 
         startGame();
 
-        GridLayout gridBoard = (GridLayout)findViewById(R.id.gridBoard4x4);
-        gridBoard.setOnTouchListener(new OnSwipeTouchListener(Game2048.this){
+        gridLayout.setOnTouchListener(new OnSwipeTouchListener(Game2048.this){
 
             @Override
             public void onSwipeBottom() {
@@ -695,7 +656,7 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText(Integer.toString(noOfMoves));
+                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
 //                    generateRandNum(1);
@@ -705,7 +666,7 @@ public class Game2048 extends AppCompatActivity {
                     undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
                     undoAction = false;
-                    scoreText.setText(Integer.toString(score));
+                    scoreText.setText("Score\n" + Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
@@ -723,7 +684,7 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText(Integer.toString(noOfMoves));
+                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
 //                    generateRandNum(1);
@@ -733,7 +694,7 @@ public class Game2048 extends AppCompatActivity {
                     undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
                     undoAction = false;
-                    scoreText.setText(Integer.toString(score));
+                    scoreText.setText("Score\n" + Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
@@ -751,7 +712,7 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText(Integer.toString(noOfMoves));
+                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
 //                    generateRandNum(1);
@@ -761,7 +722,7 @@ public class Game2048 extends AppCompatActivity {
                     undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
                     undoAction = false;
-                    scoreText.setText(Integer.toString(score));
+                    scoreText.setText("Score\n" + Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
@@ -778,7 +739,7 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText(Integer.toString(noOfMoves));
+                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
 //                    generateRandNum(1);
@@ -788,13 +749,58 @@ public class Game2048 extends AppCompatActivity {
                     undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
                     undoAction = false;
-                    scoreText.setText(Integer.toString(score));
+                    scoreText.setText("Score\n" + Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
                 }
             }
         });
+
+        //Initialize the mobile ads SDK
+//        MobileAds.initialize(Game2048.this, "@string/ad_app_id");
+        MobileAds.initialize(Game2048.this, String.valueOf(R.string.ad_app_id));
+        mAdView = findViewById(R.id.adView);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)  // AdRequest.DEVICE_ID_EMULATOR)    // Test Device: 7378D97884419E089614BB536911AA73
+                .build();
+
+        //Start loading the add in the background
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(Game2048.this);
+        mInterstitialAd.setAdUnitId(String.valueOf(R.string.ad_interstitial_unit_id));
+        Log.i("AdUnitID", mInterstitialAd.getAdUnitId());
+        mInterstitialAd.setAdListener(new AdListener(){
+
+            @Override
+            public void onAdClosed() {
+                loadAd();
+            }
+        });
+
+        mAdHandler = new Handler(Looper.getMainLooper());
+        mDisplayAd = new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mInterstitialAd.isLoaded()){
+                            Log.i("AdUnitID", "Interstitial Ad Unit is Loaded");
+                            mInterstitialAd.show();
+                        } else {
+                            Log.i("AdUnitID", "Interstitial Ad not loaded");
+                        }
+                    }
+                });
+            }
+        };
+        loadAd();
+
+        //Call Interstitial ad
+        displayInterstitialAd();
 
     }
 
@@ -804,6 +810,8 @@ public class Game2048 extends AppCompatActivity {
         Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
         startActivity(mainMenuIntent);
         finish();
+        //Call Interstitial ad
+        displayInterstitialAd();
     }
 
     @Override

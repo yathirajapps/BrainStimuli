@@ -15,7 +15,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:layout_marginTop="6dp"
         android:onClick="showQuickMath">
 
         <TextView
@@ -23,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:padding="2dp"
             android:background="@color/white"
@@ -62,7 +62,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:onClick="showTrueFalse">
 
         <TextView
@@ -70,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:padding="2dp"
             android:background="@color/white"
@@ -107,7 +108,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:onClick="showGame2048">
 
         <View android:id="@+id/strut"
@@ -120,7 +121,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@id/strut"
+            android:layout_alignRight="@+id/strut"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:padding="2dp"
             android:background="@color/white"
@@ -133,7 +136,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@id/strut"
+            android:layout_alignLeft="@+id/strut"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:paddingRight="5dp"
             android:background="@color/white"
@@ -164,12 +169,81 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/puzzle15RelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/game2048RelLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="5dp"
+        android:onClick="showPuzzle15">
+
+        <View android:id="@+id/strut2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/puzzle15Score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/strut2"
+            android:layout_alignRight="@+id/strut2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="2dp"
+            android:background="@color/white"
+            android:gravity="start|center"
+            android:textSize="12sp"
+            android:text="High Score:" />
+
+        <TextView
+            android:id="@+id/puzzle15Moves"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/strut2"
+            android:layout_alignLeft="@+id/strut2"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingRight="5dp"
+            android:background="@color/white"
+            android:gravity="end|center"
+            android:textSize="12sp"
+            android:text="Moves:" />
+
+        <ImageView
+            android:id="@+id/puzzle15ImageView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/puzzle15Score"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/game2048_board" />
+
+        <TextView
+            android:id="@+id/textViewPuzzle15Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/puzzle15ImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Puzzle 15"
+            android:textSize="13sp"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/ratingLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" >
 
         <TextView
             android:id="@+id/textView3"
@@ -192,5 +266,7 @@
             android:onClick="rateTheApp"
             app:srcCompat="@drawable/fivestarsrating" />
     </RelativeLayout>
+
+
 
 </RelativeLayout>

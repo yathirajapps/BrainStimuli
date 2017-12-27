@@ -21,7 +21,9 @@ import org.w3c.dom.Text;
 public class MainMenu extends AppCompatActivity {
 
     TextView quickMathHighScoreText, trueFalseHighScoreText, game2048HighScoreText, game2048MovesText;
-    int quickMathHighScore = 0, trueFalseHighScore = 0, game2048HighScore, game2048BestMoves;
+    TextView puzzle15HighScoreText, puzzle15MovesText;
+    int quickMathHighScore = 0, trueFalseHighScore = 0, game2048HighScore, game2048BestMoves, puzzle15BestMoves;
+    String puzzle15BestTime;
 
     public void showQuickMath(View view) {
 
@@ -51,6 +53,15 @@ public class MainMenu extends AppCompatActivity {
         finish();
     }
 
+    public void showPuzzle15(View view){
+        Log.i("Info", "Clicked on Relative Layout of Puzzle15");
+        Intent puzzle15Intent = new Intent(getApplicationContext(), Puzzle15.class);
+        puzzle15Intent.putExtra("Puzzle15BestTime", puzzle15BestTime);
+        puzzle15Intent.putExtra("Puzzle15BestMoves", puzzle15BestMoves);
+        startActivity(puzzle15Intent);
+        finish();
+    }
+
     public void rateTheApp(View view) {
 
         Uri uri = Uri.parse("market://details?id=" + getPackageName());
@@ -77,10 +88,12 @@ public class MainMenu extends AppCompatActivity {
         RelativeLayout quickMathLayout = (RelativeLayout)findViewById(R.id.quickMathRelLayout);
         RelativeLayout trueFalseLayout = (RelativeLayout)findViewById(R.id.trueFalseRelLayout);
         RelativeLayout game2048Layout = (RelativeLayout)findViewById(R.id.game2048RelLayout);
+        RelativeLayout puzzle15Layout = (RelativeLayout)findViewById(R.id.puzzle15RelLayout);
 
         quickMathLayout.setTranslationX(2000.0f);
         trueFalseLayout.setTranslationX(2000.0f);
         game2048Layout.setTranslationX(2000.0f);
+        puzzle15Layout.setTranslationX(2000.0f);
 
         quickMathLayout.animate()
                 .translationXBy(-2000.0f)
@@ -97,6 +110,11 @@ public class MainMenu extends AppCompatActivity {
                 .setDuration(1600)
                 .start();
 
+        puzzle15Layout.animate()
+                .translationXBy(-2000.0f)
+                .setDuration(2000)
+                .start();
+
         setResult(Activity.RESULT_OK);
 
 
@@ -104,6 +122,8 @@ public class MainMenu extends AppCompatActivity {
         trueFalseHighScoreText = (TextView) findViewById(R.id.trueFalseScore);
         game2048HighScoreText = (TextView) findViewById(R.id.game2048Score);
         game2048MovesText = (TextView)findViewById(R.id.game2048Moves);
+        puzzle15HighScoreText = (TextView)findViewById(R.id.puzzle15Score);
+        puzzle15MovesText = (TextView)findViewById(R.id.puzzle15Moves);
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
 
@@ -117,6 +137,11 @@ public class MainMenu extends AppCompatActivity {
         game2048HighScoreText.setText("High Score: " + Integer.toString(game2048HighScore));
         game2048BestMoves = sharedPreferences.getInt("Game2048BestMoves", 0);
         game2048MovesText.setText("Moves: " + Integer.toString(game2048BestMoves));
+
+        puzzle15BestTime = sharedPreferences.getString("Puzzle15BestTime", "00:00:00.000");
+        puzzle15HighScoreText.setText("High Score: " + puzzle15BestTime);
+        puzzle15BestMoves = sharedPreferences.getInt("Puzzle15BestMoves", 0);
+        puzzle15MovesText.setText("Moves: " + Integer.toString(puzzle15BestMoves));
 
     }
 }

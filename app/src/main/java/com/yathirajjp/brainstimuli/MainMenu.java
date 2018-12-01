@@ -46,6 +46,7 @@ public class MainMenu extends AppCompatActivity {
 
     public void showGame2048(View view){
         Log.i("Info", "Clicked on Relative Layout of Game 2048");
+        Log.i("LayoutChosen", view.getTag().toString());
         Intent game2048Intent = new Intent(getApplicationContext(), Game2048.class);
         game2048Intent.putExtra("Game2048HighScore", game2048HighScore);
         game2048Intent.putExtra("Game2048BestMoves", game2048BestMoves);
@@ -139,7 +140,7 @@ public class MainMenu extends AppCompatActivity {
         game2048MovesText.setText("Moves: " + Integer.toString(game2048BestMoves));
 
         puzzle15BestTime = sharedPreferences.getString("Puzzle15BestTime", "00:00:00.000");
-        puzzle15HighScoreText.setText("High Score: " + puzzle15BestTime);
+        puzzle15HighScoreText.setText("Best Time: " + puzzle15BestTime);
         puzzle15BestMoves = sharedPreferences.getInt("Puzzle15BestMoves", 0);
         puzzle15MovesText.setText("Moves: " + Integer.toString(puzzle15BestMoves));
 

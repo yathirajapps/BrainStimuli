@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/headerTextView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -18,31 +18,34 @@
         android:gravity="center"
         android:text="Game Over!"
         android:textColor="@color/white"
-        android:textSize="24dp" />
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/yourScoreTextView"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/headerTextView"
         android:gravity="center"
         android:background="@color/appThemeColor"
         android:textColor="@color/white"
+        android:textSize="14sp"
         android:fontFamily="@font/baumans"
         android:text="Your Score : " />
 
     <Button
         android:id="@+id/leaderboardButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/yourScoreTextView"
         android:background="@color/white"
         android:layout_marginBottom="1dp"
         android:textColor="@color/appThemeColor"
+        android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Menu"
         android:fontFamily="@font/baumans"
         android:text="Leadersboard" />
@@ -50,13 +53,14 @@
     <Button
         android:id="@+id/menuButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/leaderboardButton"
         android:background="@color/white"
         android:layout_marginBottom="1dp"
         android:textColor="@color/appThemeColor"
+        android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Menu"
         android:fontFamily="@font/baumans"
         android:text="Main Menu" />
@@ -64,13 +68,14 @@
     <Button
         android:id="@+id/continueButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/menuButton"
         android:layout_marginBottom="1dp"
         android:background="@drawable/cust_mes_bg_bottom"
         android:text="Restart the game?"
+        android:textSize="16sp"
         android:textColor="@color/appThemeColor"
         android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Menu"

@@ -46,7 +46,9 @@ public class Puzzle15 extends AppCompatActivity {
     public Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            scoreText.setText("Time\n" + stopwatch.toString());
+            String timerText = "";
+            timerText = "Time\n" + stopwatch.toString();
+            scoreText.setText(timerText);
 
             handler.postDelayed(runnable,10);
         }
@@ -92,8 +94,10 @@ public class Puzzle15 extends AppCompatActivity {
             }
 
             if (!Arrays.deepEquals(lastGameState, gameState)) {
+                String movesText = "";
                 noOfMoves++;
-                noOfMovesText.setText("Moves\n" + String.format("%03d", noOfMoves));
+                movesText = "Moves\n" + String.format("%03d", noOfMoves);
+                noOfMovesText.setText(movesText);
 
                 loadTiles();
 
@@ -130,8 +134,10 @@ public class Puzzle15 extends AppCompatActivity {
             }
 
             if (!Arrays.deepEquals(lastGameState, gameState)) {
+                String movesText = "";
                 noOfMoves++;
-                noOfMovesText.setText("Moves\n" + String.format("%03d", noOfMoves));
+                movesText = "Moves\n" + String.format("%03d", noOfMoves);
+                noOfMovesText.setText(movesText);
 
                 loadTiles();
 
@@ -167,8 +173,10 @@ public class Puzzle15 extends AppCompatActivity {
             }
 
             if (!Arrays.deepEquals(lastGameState, gameState)) {
+                String movesText = "";
                 noOfMoves++;
-                noOfMovesText.setText("Moves\n" + String.format("%03d", noOfMoves));
+                movesText = "Moves\n" + String.format("%03d", noOfMoves);
+                noOfMovesText.setText(movesText);
 
                 loadTiles();
 
@@ -204,8 +212,10 @@ public class Puzzle15 extends AppCompatActivity {
             }
 
             if (!Arrays.deepEquals(lastGameState, gameState)) {
+                String movesText = "";
                 noOfMoves++;
-                noOfMovesText.setText("Moves\n" + String.format("%03d", noOfMoves));
+                movesText = "Moves\n" + String.format("%03d", noOfMoves);
+                noOfMovesText.setText(movesText);
 
                 loadTiles();
 
@@ -247,11 +257,11 @@ public class Puzzle15 extends AppCompatActivity {
         final Dialog customDialog = new Dialog(Puzzle15.this);
         customDialog.setContentView(R.layout.custom_dialog_layout);
 
-        TextView headerTextView = (TextView)customDialog.findViewById(R.id.headerTextView);
-        TextView yourScoreTextView = (TextView)customDialog.findViewById(R.id.yourScoreTextView);
-        Button menuButton = (Button)customDialog.findViewById(R.id.menuButton);
-        Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
-        Button leaderBoardButton = (Button)customDialog.findViewById(R.id.leaderboardButton);
+        TextView headerTextView = customDialog.findViewById(R.id.headerTextView);
+        TextView yourScoreTextView = customDialog.findViewById(R.id.yourScoreTextView);
+        Button menuButton = customDialog.findViewById(R.id.menuButton);
+        Button continueButton = customDialog.findViewById(R.id.continueButton);
+        Button leaderBoardButton = customDialog.findViewById(R.id.leaderboardButton);
 
         headerTextView.setText(pHeading);
         yourScoreTextView.setText(pScore);
@@ -312,7 +322,7 @@ public class Puzzle15 extends AppCompatActivity {
                 imageResId = getResources().getIdentifier("image" + Integer.toString(i) + Integer.toString(j), "id", getPackageName());
                 drawableResId = getResources().getIdentifier("number" + Integer.toString(gameState[i][j]), "drawable", getPackageName());
 
-                imageView = (ImageView)findViewById(imageResId);
+                imageView = findViewById(imageResId);
 
                 imageView.setImageResource(drawableResId);
 
@@ -398,6 +408,7 @@ public class Puzzle15 extends AppCompatActivity {
 
         stopwatch.stop();
         handler.removeCallbacks(runnable);
+        gameInProgress=false;
 
         startGame();
     }

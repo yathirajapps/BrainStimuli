@@ -8,9 +8,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +44,7 @@ public class QuickMath extends AppCompatActivity {
     CountDownTimer waitTimer;
     SeekBar timerSeekbar;
     SharedPreferences sharedPreferences;
+    Handler handler;
 
 
     public int getRandom(int minimum, int maximum) {
@@ -201,9 +204,15 @@ public class QuickMath extends AppCompatActivity {
         Button menuButton = (Button)customDialog.findViewById(R.id.menuButton);
         Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
         Button leaderBoardButton = (Button)customDialog.findViewById(R.id.leaderboardButton);
+        String questionWithAnswer;
+
+        questionWithAnswer = questionView.getText().toString();
+        questionWithAnswer = questionWithAnswer.replace("?", answers.get(correctAnsLoc));
+        questionWithAnswer = questionWithAnswer + "\n" + pScore;
+
 
         headerTextView.setText(pHeading);
-        yourScoreTextView.setText(pScore);
+        yourScoreTextView.setText(questionWithAnswer);
         //Method for Menu button click
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,6 +256,19 @@ public class QuickMath extends AppCompatActivity {
 
     }
 
+    public Runnable runCustDialog = new Runnable() {
+        @Override
+        public void run() {
+
+            //Show custom dialog here
+            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+            } else {
+                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+            }
+        }
+    };
+
     public void checkAnswer(View view) {
 
         if (view.getTag().equals(Integer.toString(correctAnsLoc))){
@@ -281,11 +303,13 @@ public class QuickMath extends AppCompatActivity {
             waitTimer.cancel();
 
             //Call the custom dialog here
-            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-            } else {
-                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-            }
+//            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+//                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+//            } else {
+//                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+//            }
+
+            handler.postDelayed(runCustDialog, 50);
 
         }
 
@@ -318,11 +342,12 @@ public class QuickMath extends AppCompatActivity {
                 timerSeekbar.setProgress(0);
 
                 //Call the custom dialog here
-                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-                } else {
-                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-                }
+//                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+//                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+//                } else {
+//                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+//                }
+                handler.postDelayed(runCustDialog, 50);
             }
         }.start();
 
@@ -355,6 +380,7 @@ public class QuickMath extends AppCompatActivity {
         timerSeekbar = (SeekBar)findViewById(R.id.timerSeekbar);
         highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
+        handler = new Handler();
 
         timerSeekbar.setMax(maxSecondsPerQuestion * 1000);
         timerSeekbar.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(ResourcesCompat.getColor(

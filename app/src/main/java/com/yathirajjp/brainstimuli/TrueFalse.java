@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class TrueFalse extends AppCompatActivity {
     int trueFalse;  // 0 -> False,  1 -> True
     SharedPreferences sharedPreferences;
     int highScore = 0;
+    Handler handler;
 
 
     public int getRandom(int minimum, int maximum) {
@@ -135,6 +137,7 @@ public class TrueFalse extends AppCompatActivity {
         Button menuButton = (Button)customDialog.findViewById(R.id.menuButton);
         Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
 
+
         headerTextView.setText(pHeading);
         yourScoreTextView.setText(pScore);
         //Method for Menu button click
@@ -171,6 +174,19 @@ public class TrueFalse extends AppCompatActivity {
 
     }
 
+    public Runnable runCustDialog = new Runnable() {
+        @Override
+        public void run() {
+
+            //Show custom dialog here
+            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+            } else {
+                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+            }
+        }
+    };
+
     public void checkAnswer(View view) {
 
         if (view.getTag().equals(Integer.toString(trueFalse))){
@@ -204,11 +220,12 @@ public class TrueFalse extends AppCompatActivity {
             waitTimer.cancel();
 
             //Call the custom dialog here
-            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-            } else {
-                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-            }
+//            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+//                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+//            } else {
+//                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+//            }
+            handler.postDelayed(runCustDialog, 500);
 
         }
 
@@ -239,11 +256,12 @@ public class TrueFalse extends AppCompatActivity {
                 timerSeekbar.setProgress(0);
 
                 //Call the custom dialog here
-                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-                } else {
-                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-                }
+//                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+//                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+//                } else {
+//                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+//                }
+                handler.postDelayed(runCustDialog, 500);
             }
         }.start();
 
@@ -273,6 +291,7 @@ public class TrueFalse extends AppCompatActivity {
         timerSeekbar = (SeekBar)findViewById(R.id.timerSeekbar);
         highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
+        handler = new Handler();
 
         timerSeekbar.setMax(maxSecondsPerQuestion * 1000);
         timerSeekbar.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(ResourcesCompat.getColor(

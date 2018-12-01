@@ -29,7 +29,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:clickable="false"
         android:max="5500"
         android:pointerIcon="none"
@@ -59,7 +59,7 @@
         android:fontFamily="@font/baumans"
         android:text="0:05"
         android:textColor="@color/appThemeColor"
-        android:textSize="16sp"/>
+        android:textSize="14sp"/>
 
     <ImageView
         android:id="@+id/scoreImageView"
@@ -84,19 +84,17 @@
         android:textColor="@color/appThemeColor"
         android:fontFamily="@font/baumans"
         android:text="0"
-        android:textSize="16sp"/>
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/answersGrid"
-        android:layout_marginBottom="40dp"
+        android:layout_centerInParent="true"
         android:fontFamily="@font/baumans"
         android:text="TextView"
         android:textColor="@android:color/darker_gray"
-        android:textSize="30sp" />
+        android:textSize="24sp" />
 
 
     <android.support.v7.widget.GridLayout
@@ -105,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="60dp"
         android:visibility="visible"
         app:columnCount="2"
         app:rowCount="2"
@@ -114,13 +112,13 @@
         <Button
             android:id="@+id/button1"
             android:layout_width="wrap_content"
-            android:layout_height="65dp"
+            android:layout_height="50dp"
             android:background="@drawable/round_btn"
             android:fontFamily="@font/baumans"
             android:onClick="checkAnswer"
             android:tag="0"
             android:textColor="#ffffff"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="visible"
             app:layout_column="0"
@@ -134,13 +132,13 @@
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
-            android:layout_height="65dp"
+            android:layout_height="50dp"
             android:background="@drawable/round_btn"
             android:fontFamily="@font/baumans"
             android:onClick="checkAnswer"
             android:tag="1"
             android:textColor="#ffffff"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="visible"
             app:layout_column="1"
@@ -154,13 +152,13 @@
         <Button
             android:id="@+id/button3"
             android:layout_width="wrap_content"
-            android:layout_height="65dp"
+            android:layout_height="50dp"
             android:background="@drawable/round_btn"
             android:fontFamily="@font/baumans"
             android:onClick="checkAnswer"
             android:tag="2"
             android:textColor="#ffffff"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="visible"
             app:layout_column="0"
@@ -174,13 +172,13 @@
         <Button
             android:id="@+id/button4"
             android:layout_width="wrap_content"
-            android:layout_height="65dp"
+            android:layout_height="50dp"
             android:background="@drawable/round_btn"
             android:fontFamily="@font/baumans"
             android:onClick="checkAnswer"
             android:tag="3"
             android:textColor="#ffffff"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="visible"
             app:layout_column="1"

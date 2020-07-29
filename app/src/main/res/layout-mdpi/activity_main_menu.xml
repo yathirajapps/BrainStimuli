@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainMenuLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/numbersimage5"
+    tools:context="com.yathirajjp.brainstimuli.MainMenu">
+
+    <RelativeLayout
+        android:id="@+id/quickMathRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        android:onClick="showQuickMath">
+
+        <TextView
+            android:id="@+id/quickMathScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="2dp"
+            android:background="@color/white"
+            android:gravity="start|center"
+            android:textSize="9sp"
+            android:text="High Score:" />
+
+        <ImageView
+            android:id="@+id/timerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/quickMathScore"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/timer" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timerImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Quick Math"
+            android:textSize="10sp"
+            android:textColor="@color/white" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/trueFalseRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/quickMathRelLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="15dp"
+        android:onClick="showTrueFalse">
+
+        <TextView
+            android:id="@+id/trueFalseScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="2dp"
+            android:background="@color/white"
+            android:gravity="start|center"
+            android:textSize="9sp"
+            android:text="High Score:" />
+
+        <ImageView
+            android:id="@+id/trueFalseImageView"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/trueFalseScore"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/thumb_up_down_edit" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trueFalseImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="True / False"
+            android:textSize="10sp"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/game2048RelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trueFalseRelLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="15dp"
+        android:onClick="showGame2048">
+
+        <View android:id="@+id/strut"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/game2048Score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/strut"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="2dp"
+            android:background="@color/white"
+            android:gravity="start|center"
+            android:textSize="9sp"
+            android:text="High Score:" />
+
+        <TextView
+            android:id="@+id/game2048Moves"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/strut"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="5dp"
+            android:background="@color/white"
+            android:gravity="end|center"
+            android:textSize="9sp"
+            android:text="Moves:" />
+
+        <ImageView
+            android:id="@+id/game2048ImageView"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/game2048Score"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/game2048_board" />
+
+        <TextView
+            android:id="@+id/textViewGame2048Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game2048ImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Game 2048"
+            android:textSize="10sp"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/puzzle15RelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/game2048RelLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="15dp"
+        android:onClick="showPuzzle15">
+
+        <View android:id="@+id/strutPuzzle15"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/puzzle15Time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/strutPuzzle15"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="2dp"
+            android:background="@color/white"
+            android:gravity="start|center"
+            android:textSize="9sp"
+            android:text="Best Time:" />
+
+        <TextView
+            android:id="@+id/puzzle15Moves"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/strutPuzzle15"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="5dp"
+            android:background="@color/white"
+            android:gravity="end|center"
+            android:textSize="9sp"
+            android:text="Moves:" />
+
+        <ImageView
+            android:id="@+id/puzzle15ImageView"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/puzzle15Time"
+            android:background="@drawable/cust_mes_bg_top"
+            app:srcCompat="@drawable/puzzle15_board" />
+
+        <TextView
+            android:id="@+id/textViewPuzzle15Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/puzzle15ImageView"
+            android:layout_marginBottom="4dp"
+            android:background="@color/appThemeColor"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Puzzle 15"
+            android:textSize="10sp"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ratingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginBottom="5dp"
+            android:text="Are you enjoying this? How about rating this app?" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/textView3"
+            android:layout_centerInParent="true"
+            android:background="@color/white"
+            android:onClick="rateTheApp"
+            app:srcCompat="@drawable/fivestarsrating" />
+    </RelativeLayout>
+
+</RelativeLayout>

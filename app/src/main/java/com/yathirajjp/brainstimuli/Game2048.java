@@ -7,12 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ActionMenuView;
+
 import android.os.Bundle;
-import android.util.Log;
+import android.os.CountDownTimer;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,57 +25,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
 import java.util.Arrays;
 import java.util.Random;
 
 public class Game2048 extends AppCompatActivity {
 
-    private AdView mAdView;
-    private InterstitialAd mInterstitialAd;
-    private Handler mAdHandler;
-    private Runnable mDisplayAd;
-
     int[][] gameState, lastGameState, undoGameState, animateTiles;
     int score, undoScore, highScore, noOfMoves, bestMoves;
     TextView scoreText, highScoreText, noOfMovesText, highScoreMsgTextView;
     SharedPreferences sharedPreferences;
-    boolean isGameComplete, undoAction, gameInProgress;
+    boolean isGameComplete, undoAction, loadPrevGame, contCompletedGame;
     GridLayout gridLayout;
-    Animation merge_tile_animation, new_tile_animation;
-    String custDialogHeading;
-    Handler handler;
+    Animation animation;
+    ImageView undoImage;
+    int undoImageID, undoDisableID;
 
 
-
-    //This procedure will convert the 2D int array in String format to 2D int array
-    public int[][] stringTo2DIntArray(String arrayString){
-        String[] splitArrayString = arrayString.split("\\],");
-
-        int[][] returnArray = new int[splitArrayString.length][4];
-        int[] eachRow;
-
-        for (int i=0; i< splitArrayString.length; i++){
-            splitArrayString[i] = splitArrayString[i].replaceAll("\\[", "")
-                    .replaceAll("\\]", "").replaceAll("\\s", "");
-
-            String[] eachElement = splitArrayString[i].split(",");
-            eachRow = new int[eachElement.length];
-
-            for (int j=0; j<eachElement.length; j++){
-                eachRow[j] = Integer.parseInt(eachElement[j]);
-            }
-
-            returnArray[i] = eachRow;
-
-        }
-
-        return returnArray;
-    }
 
     //This procedure gets the Array value of given position.  Returns -1 in case of invalid position
     public int getArrayValue(int i, int j) {
@@ -140,7 +106,6 @@ public class Game2048 extends AppCompatActivity {
             randNum = (random.nextInt(num) + 1) * 2;
 
             gameState[i][j] = randNum;
-            animateTiles[i][j] = 2;
         }
     }
 
@@ -159,13 +124,10 @@ public class Game2048 extends AppCompatActivity {
 
                 imageView.setImageResource(drawableResId);
 
-                if (!undoAction && animateTiles[i][j] == 1) {
+                if (!undoAction && animateTiles[i][j] == 1){
                     //Animate this tile
-                    imageView.startAnimation(merge_tile_animation);
-
-                }else if (animateTiles[i][j] == 2)
-                        imageView.startAnimation(new_tile_animation);
-
+                    imageView.startAnimation(animation);
+                }
 
             }
         }
@@ -173,36 +135,54 @@ public class Game2048 extends AppCompatActivity {
         //Check if the Game is Over, Immovable tiles found
         if (isGameOver()){
 
-            gameInProgress = false;
+            CountDownTimer pauseNShow = new CountDownTimer(500, 600) {
+                @Override
+                public void onTick(long l) {
 
-            gridLayout.setAlpha(0.5f);
-            gridLayout.setEnabled(false);
+                }
 
-            // Show the custom dialog
-            custDialogHeading = "Game Over!";
-            handler.postDelayed(runCustDialog, 1000);
-//            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-//                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-//            } else {
-//                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-//            }
+                @Override
+                public void onFinish() {
+                    gridLayout.setAlpha(0.5f);
+                    gridLayout.setEnabled(false);
+
+                    // Show the custom dialog
+                    if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                        showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+                    } else {
+                        showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+                    }
+
+                }
+            }.start();
 
         }
 
         //Check if the Game is complete by forming a 2048 tile
-        if (isGameComplete){
+        if (isGameComplete && !contCompletedGame){
 
-            gridLayout.setAlpha(0.5f);
-            gridLayout.setEnabled(false);
+            CountDownTimer pauseNShow = new CountDownTimer(500,600) {
+                @Override
+                public void onTick(long l) {
 
-            // Show the custom dialog
-            custDialogHeading = "Congratulations, You Won!";
-            handler.postDelayed(runCustDialog, 1000);
-//            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-//                showCustomDialog("Congratulations, You Won!", "New High Score: " + Integer.toString(score));
-//            } else {
-//                showCustomDialog("Congratulations, You Won!", "Your Score: " + Integer.toString(score));
-//            }
+                }
+
+                @Override
+                public void onFinish() {
+
+                    gridLayout.setAlpha(0.5f);
+                    gridLayout.setEnabled(false);
+
+                    // Show the custom dialog
+                    if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                        showCustomDialog("Congratulations, You Won!", "New High Score: " + Integer.toString(score));
+                    } else {
+                        showCustomDialog("Congratulations, You Won!", "Your Score: " + Integer.toString(score));
+                    }
+                }
+            }.start();
+
+
         }
     } // End of loadTiles
 
@@ -212,7 +192,6 @@ public class Game2048 extends AppCompatActivity {
     public void moveSlidesRight(){
 
         boolean tileMerged;
-        gameInProgress = true;
 
         for (int i=0; i<4; i++){
             for (int j=3; j>=0; j--){
@@ -270,7 +249,6 @@ public class Game2048 extends AppCompatActivity {
     public void moveSlidesLeft(){
 
         boolean tileMerged;
-        gameInProgress = true;
 
         for (int i=0; i<4; i++){
             for (int j=0; j<4; j++){
@@ -328,7 +306,6 @@ public class Game2048 extends AppCompatActivity {
     public void moveSlidesUp(){
 
         boolean tileMerged;
-        gameInProgress = true;
 
         for (int j=0; j<4; j++){
             for (int i=0; i<4; i++){
@@ -387,7 +364,6 @@ public class Game2048 extends AppCompatActivity {
     public void moveSlidesDown(){
 
         boolean tileMerged;
-        gameInProgress = true;
 
         for (int j=0; j<4; j++){
             for (int i=3; i>=0; i--){
@@ -453,46 +429,12 @@ public class Game2048 extends AppCompatActivity {
 
         }
         return result;
-    }
-
-
-
-    public void loadAd(){
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//                .addTestDevice("7378D97884419E089614BB536911AA73")
-                .build();
-
-//        mInterstitialAd.loadAd(adRequest);
-
-        Log.i("AdUnitID", "Loading the Interstitial Ad");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-    }
-
-
-    public void displayInterstitialAd(){
-
-//        if (mInterstitialAd.isLoaded())
-//            mInterstitialAd.show();
-//        else
-//            Log.i("AdUnitID", "Interstitial Ad not loaded yet");
-        mAdHandler.postDelayed(mDisplayAd, 1);
-
-//        loadAd();
-    }
+    } //End of deepCopy2DArray
 
 
 
     // This procedure will undo the last move
     public void undoGame(View view){
-
-        // No animation for Undo action
-        for (int i=0; i < 4; i++){
-            for (int j=0; j < 4; j++){
-                animateTiles[i][j] = 0;
-            }
-        }
-
         if (!Arrays.deepEquals(gameState, undoGameState)) {
             undoAction = true;
 
@@ -503,40 +445,70 @@ public class Game2048 extends AppCompatActivity {
 
             if (highScore == score) {
                 highScore = undoScore;
-                highScoreText.setText("High Score\n" + Integer.toString(highScore));
+                highScoreText.setText(Integer.toString(highScore));
             }
             score = undoScore;
-            scoreText.setText("Score\n" + Integer.toString(score));
+            scoreText.setText(Integer.toString(score));
 
             noOfMoves++;
-            noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
+            noOfMovesText.setText(Integer.toString(noOfMoves));
 
             undoAction = false;
+
+            undoImage.setImageResource(undoDisableID);
         }
-
-//        Log.i("Game2048", "Calling the displayInterstitialAd");
-//        displayInterstitialAd();
-
-    }
+    } //End of undoGame
 
 
     public void startGame(){
 
         isGameComplete = false;
-        noOfMoves = 0;
-        noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
 
-        //Initialize the game array
-        for (int i=0; i < 4; i++){
-            for (int j=0; j < 4; j++){
-                gameState[i][j] = 0;
-                animateTiles[i][j] = 0;
+        if(loadPrevGame) {
+            //Load the Previous game state
+            for(int row=0; row < 4; row++){
+                for (int col=0; col < 4; col++){
+                    gameState[row][col] = sharedPreferences.getInt("G2048_" + row + "_" + col, 0);
+                    if(gameState[row][col] != 0){
+                        animateTiles[row][col] = 1;
+                        if(gameState[row][col] == 2048) {
+                            isGameComplete = true;
+                            contCompletedGame = true;
+                        }
+                    }
+                }
             }
+
+            noOfMoves = sharedPreferences.getInt("G2048_PrevMoves",0);
+            score = sharedPreferences.getInt("G2048_PrevScore",0);
+            undoScore = score;
+
+            loadPrevGame = false;
+
+        } else {
+            //Start the new game
+            //Initialize the game array
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    gameState[i][j] = 0;
+                    animateTiles[i][j] = 0;
+                }
+            }
+
+            //Generate the first Two random numbers
+            generateRandNum(2);
+            generateRandNum(2);
+
+            noOfMoves = 0;
+            score = 0;
+            undoScore = 0;
+
         }
 
-        //Generate the first Two random numbers
-        generateRandNum(2);
-        generateRandNum(2);
+        noOfMovesText.setText(Integer.toString(noOfMoves));
+        scoreText.setText(Integer.toString(score));
+
+        undoImage.setImageResource(undoDisableID);
 
         //Store the current and initial state as Undo State
         undoGameState = deepCopy2DArray(gameState);
@@ -544,20 +516,47 @@ public class Game2048 extends AppCompatActivity {
         //Load the tiles as per gameState array
         loadTiles();
 
-        score = 0;
-        undoScore = 0;
-        scoreText.setText("Score\n0");
+    } //End of startGame
 
-    }
 
     public void restartGame(View view){
+        AlertDialog.Builder popupMsgBuilder = new AlertDialog.Builder(this);
 
-        gridLayout.setAlpha(1.0f);
-        gridLayout.setEnabled(true);
-        highScoreMsgTextView.setVisibility(View.INVISIBLE);
+        popupMsgBuilder.setTitle("Confirm");
+        popupMsgBuilder.setMessage("Game in progress. Are you sure to Restart?");
 
-        startGame();
-    }
+        popupMsgBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                gridLayout.setAlpha(1.0f);
+                gridLayout.setEnabled(true);
+
+                startGame();
+            }
+        });
+
+        popupMsgBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //Do Nothing
+                dialogInterface.dismiss();
+            }
+        });
+
+        if (score > 0 ){
+            AlertDialog popupMsg = popupMsgBuilder.create();
+
+            popupMsg.show();
+        } else {
+            gridLayout.setAlpha(1.0f);
+            gridLayout.setEnabled(true);
+
+            startGame();
+        }
+
+    } // End of restartGame
 
 
     public void showCustomDialog(final String pHeading, String pScore) {
@@ -567,13 +566,13 @@ public class Game2048 extends AppCompatActivity {
         TextView headerTextView = (TextView)customDialog.findViewById(R.id.headerTextView);
         TextView yourScoreTextView = (TextView)customDialog.findViewById(R.id.yourScoreTextView);
         Button menuButton = (Button)customDialog.findViewById(R.id.menuButton);
-        Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
+        final Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
         Button leaderBoardButton = (Button)customDialog.findViewById(R.id.leaderboardButton);
 
         headerTextView.setText(pHeading);
         yourScoreTextView.setText(pScore);
         if (! pHeading.equals("Game Over!")) {
-            continueButton.setText("Continue the game?");
+            continueButton.setText("Keep going?");
         }
         //Method for Menu button click
         menuButton.setOnClickListener(new View.OnClickListener() {
@@ -599,9 +598,11 @@ public class Game2048 extends AppCompatActivity {
                 //Reset the score
                 if (pHeading.equals("Game Over!")) {
                     score = 0;
-                    scoreText.setText("Score\n" + Integer.toString(score));
+                    scoreText.setText(Integer.toString(score));
                     highScoreMsgTextView.setVisibility(View.INVISIBLE);
                     startGame();
+                } else{
+                    contCompletedGame = true;
                 }
 
             }
@@ -615,34 +616,16 @@ public class Game2048 extends AppCompatActivity {
             }
         });
 
-        try {
-            customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        } catch (NullPointerException e){
-            Log.i("CustomDialog", e.getMessage());
-        }
-
+        customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         customDialog.setCanceledOnTouchOutside(false);
         customDialog.setCancelable(false);
         customDialog.show();
 
-    }
-
-    public Runnable runCustDialog = new Runnable() {
-        @Override
-        public void run() {
-
-            //Show custom dialog here
-            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                showCustomDialog(custDialogHeading, "New High Score: " + Integer.toString(score));
-            } else {
-                showCustomDialog(custDialogHeading, "Your Score: " + Integer.toString(score));
-            }
-        }
-    };
+    } //End of showCustomDialog
 
     public void applyHighScore(){
         highScore = score;
-        highScoreText.setText("High Score\n" + Integer.toString(highScore));
+        highScoreText.setText(Integer.toString(highScore));
         sharedPreferences.edit().putInt("Game2048HighScore", highScore).apply();
         sharedPreferences.edit().putInt("Game2048BestMoves", noOfMoves).apply();
 
@@ -658,103 +641,75 @@ public class Game2048 extends AppCompatActivity {
 
             highScoreMsgTextView.startAnimation(animation);
         }
-    }
+    }  //End of applyHighScore
 
-    public void checkSavedGame(){
-        final String savedGame;
-        final int savedGameScore, savedGameMoves;
-
-        savedGame = sharedPreferences.getString("Game2048SavedGame", null);
-        savedGameScore = sharedPreferences.getInt("Game2048SavedGameScore", 0);
-        savedGameMoves = sharedPreferences.getInt("Game2048SavedGameMoves", 0);
-
-        if (savedGameScore > 0){
-            // There is saved game and ask if the user wants to load it
-            AlertDialog.Builder builder;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                builder = new AlertDialog.Builder(Game2048.this, android.R.style.Theme_Material_Dialog_Alert);
-            } else {
-                builder = new AlertDialog.Builder(Game2048.this);
-            }
-
-            builder.setTitle("Saved Game")
-                    .setMessage("You have a saved game.  Would you like to load it?\\nYou will lose it if you don't load it now!")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // populate the gamesate, undoGameState, Moves and load tiles
-                            gameState = stringTo2DIntArray(savedGame);
-                            undoGameState = deepCopy2DArray(gameState);
-                            score = savedGameScore;
-                            noOfMoves = savedGameMoves;
-                            undoScore = score;
-
-                            loadTiles();
-
-                            noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
-                            scoreText.setText("Score\n" + Integer.toString(score));
-
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            // Delete the Keys and continue with new game
-                            sharedPreferences.edit().remove("Game2048SavedGame").apply();
-                            sharedPreferences.edit().remove("Game2048SavedGameScore").apply();
-                            sharedPreferences.edit().remove("Game2048SavedGameMoves").apply();
-
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game2048);
 
-
-
-
         scoreText = (TextView)findViewById(R.id.textViewCurrScoreValue);
         highScoreText = (TextView)findViewById(R.id.textViewHSValue);
         noOfMovesText = (TextView)findViewById(R.id.textViewNoOfMoves);
         gridLayout = (GridLayout)findViewById(R.id.gridBoard4x4);
         highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
+        undoImage = (ImageView)findViewById(R.id.imageViewUndo);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
-        handler = new Handler();
 
         gameState = new int[4][4];
         lastGameState = new int[4][4];
         undoGameState = new int[4][4];
         animateTiles = new int[4][4];
-        gameInProgress = false;
 
-        // Set the animation settings for Merged tiles
-        merge_tile_animation = new ScaleAnimation(1f, 1.2f, 1f, 1.2f);
-        merge_tile_animation.setDuration(100);
-        merge_tile_animation.setRepeatCount(0);
-
-        // Set the animation settings for New tile
-        new_tile_animation = new ScaleAnimation(0f, 1f, 0f, 1f);
-        new_tile_animation.setDuration(200);
-        new_tile_animation.setRepeatCount(0);
+        // Set the animation settings
+        animation = new ScaleAnimation(1f, 1.2f, 1f, 1.2f);
+        animation.setDuration(100);
+        animation.setRepeatCount(0);
 
 
         Intent intent = getIntent();
         highScore = intent.getIntExtra("Game2048HighScore", 0);
-        highScoreText.setText("High Score\n" + Integer.toString(highScore));
+        highScoreText.setText(Integer.toString(highScore));
         bestMoves = intent.getIntExtra("Game2048BestMoves", 0);
 
-        startGame();
+        undoImageID = getResources().getIdentifier("undobutton2", "drawable", getPackageName());
+        undoDisableID = getResources().getIdentifier("undodisable", "drawable", getPackageName());
 
-        gridLayout.setOnTouchListener(new OnSwipeTouchListener(Game2048.this){
+        //Check if previous game is saved
+        if(sharedPreferences.getString("Game2048SavedGame", "No").equals("Yes")) {
+            //Previous game was saved. Check if the user wants to continue that or wants to start a new game
+            AlertDialog.Builder popupMsgBuilder = new AlertDialog.Builder(this);
+
+            popupMsgBuilder.setTitle("Confirm");
+            popupMsgBuilder.setMessage("Continue Previous Game?");
+            popupMsgBuilder.setCancelable(false);
+
+            popupMsgBuilder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    loadPrevGame = true;
+                    startGame();
+                }
+            });
+
+            popupMsgBuilder.setNegativeButton("New Game", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    loadPrevGame = false;
+                    startGame();
+                }
+            });
+
+            AlertDialog popupMsg = popupMsgBuilder.create();
+
+            sharedPreferences.edit().putString("Game2048SavedGame", "No").apply();
+            popupMsg.show();
+        }
+        else { startGame();}
+
+        GridLayout gridBoard = (GridLayout)findViewById(R.id.gridBoard4x4);
+        gridBoard.setOnTouchListener(new OnSwipeTouchListener(Game2048.this){
 
             @Override
             public void onSwipeBottom() {
@@ -767,20 +722,16 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-//                    generateRandNum(1);
-//                    loadTiles();
-                    loadTiles();
                     generateRandNum(1);
-                    undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
-                    undoAction = false;
-                    scoreText.setText("Score\n" + Integer.toString(score));
+                    scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
+                    undoImage.setImageResource(undoImageID);
                 }
 
             }
@@ -795,22 +746,17 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-//                    generateRandNum(1);
-//                    loadTiles();
-                    loadTiles();
                     generateRandNum(1);
-                    undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
-                    undoAction = false;
-                    scoreText.setText("Score\n" + Integer.toString(score));
+                    scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
+                    undoImage.setImageResource(undoImageID);
                 }
-
             }
 
             @Override
@@ -823,20 +769,16 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-//                    generateRandNum(1);
-//                    loadTiles();
-                    loadTiles();
                     generateRandNum(1);
-                    undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
-                    undoAction = false;
-                    scoreText.setText("Score\n" + Integer.toString(score));
+                    scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
+                    undoImage.setImageResource(undoImageID);
                 }
             }
 
@@ -850,133 +792,88 @@ public class Game2048 extends AppCompatActivity {
 
                 if (!Arrays.deepEquals(lastGameState, gameState)) {
                     noOfMoves++;
-                    noOfMovesText.setText("Moves\n" + Integer.toString(noOfMoves));
+                    noOfMovesText.setText(Integer.toString(noOfMoves));
                     //Store the current state as Undo state before generating new number
                     undoGameState = deepCopy2DArray(lastGameState);
-//                    generateRandNum(1);
-//                    loadTiles();
-                    loadTiles();
                     generateRandNum(1);
-                    undoAction = true;   // Setting this flag just not to animate the merged cells again
                     loadTiles();
-                    undoAction = false;
-                    scoreText.setText("Score\n" + Integer.toString(score));
+                    scoreText.setText(Integer.toString(score));
                     if (score > highScore){
                         applyHighScore();
                     }
+                    undoImage.setImageResource(undoImageID);
                 }
             }
         });
-
-        //Initialize the mobile ads SDK
-//        MobileAds.initialize(Game2048.this, "@string/ad_app_id");
-        MobileAds.initialize(Game2048.this, String.valueOf(R.string.ad_app_id));
-        mAdView = findViewById(R.id.adView);
-
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)  // AdRequest.DEVICE_ID_EMULATOR)    // Test Device: 7378D97884419E089614BB536911AA73
-                .build();
-
-        //Start loading the add in the background
-        mAdView.loadAd(adRequest);
-
-        mInterstitialAd = new InterstitialAd(Game2048.this);
-        mInterstitialAd.setAdUnitId(String.valueOf(R.string.ad_interstitial_unit_id));
-        Log.i("AdUnitID", mInterstitialAd.getAdUnitId());
-        mInterstitialAd.setAdListener(new AdListener(){
-
-            @Override
-            public void onAdClosed() {
-                loadAd();
-            }
-        });
-
-        mAdHandler = new Handler(Looper.getMainLooper());
-        mDisplayAd = new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mInterstitialAd.isLoaded()){
-                            Log.i("AdUnitID", "Interstitial Ad Unit is Loaded");
-                            mInterstitialAd.show();
-                        } else {
-                            Log.i("AdUnitID", "Interstitial Ad not loaded");
-                        }
-                    }
-                });
-            }
-        };
-        loadAd();
-
-        //Call Interstitial ad
-        displayInterstitialAd();
-
-        //Check if there is a game saved previously and load it if required
-        checkSavedGame();
 
     }
 
     @Override
     public void onBackPressed() {
+        final AlertDialog.Builder popupMsgBuilder = new AlertDialog.Builder(this);
 
-        if (gameInProgress) {
-            AlertDialog.Builder builder;
+        popupMsgBuilder.setTitle("Confirm");
+        popupMsgBuilder.setMessage("Game is in progress!");
+        popupMsgBuilder.setCancelable(true);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                builder = new AlertDialog.Builder(Game2048.this, android.R.style.Theme_Material_Dialog_Alert);
-            } else {
-                builder = new AlertDialog.Builder(Game2048.this);
+        popupMsgBuilder.setPositiveButton("Save & Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+               //SharedPreferences to save the gavem
+                sharedPreferences.edit().putString("Game2048SavedGame", "Yes").apply();
+                for(int row=0; row < 4; row++){
+                    for(int col=0; col < 4; col++){
+                        sharedPreferences.edit().putInt("G2048_" + row + "_" + col, gameState[row][col]).apply();
+                    }
+                }
+                sharedPreferences.edit().putInt("G2048_PrevMoves", noOfMoves).apply();
+                sharedPreferences.edit().putInt("G2048_PrevScore", score).apply();
+
+                Toast.makeText(Game2048.this,"Game Saved.", Toast.LENGTH_SHORT).show();
+
+                Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+                startActivity(mainMenuIntent);
+                finish();
             }
+        });
 
-            builder.setTitle("Game in Progress")
-                    .setMessage("Do you want to save the game?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Save the game state and exit
-                            sharedPreferences.edit().putString("Game2048SavedGame", Arrays.deepToString(gameState)).apply();
-                            sharedPreferences.edit().putInt("Game2048SavedGameScore", score).apply();
-                            sharedPreferences.edit().putInt("Game2048SavedGameMoves", noOfMoves).apply();
+        popupMsgBuilder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-                            Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
-                            startActivity(mainMenuIntent);
-                            finish();
-                            //Call Interstitial ad
-                            displayInterstitialAd();
+                sharedPreferences.edit().putString("Game2048SavedGame", "No").apply();
+                for(int row=0; row < 4; row++){
+                    for(int col=0; col < 4; col++){
+                        sharedPreferences.edit().putInt("G2048_" + row + "_" + col, 0).apply();
+                    }
+                }
+                sharedPreferences.edit().putInt("G2048_PrevMoves", 0).apply();
+                sharedPreferences.edit().putInt("G2048_PrevScore", 0).apply();
 
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+                startActivity(mainMenuIntent);
+                finish();
 
-                            // Delete the Key and exit
-                            sharedPreferences.edit().remove("Game2048SavedGame").apply();
-                            sharedPreferences.edit().remove("Game2048SavedGameScore").apply();
-                            sharedPreferences.edit().remove("Game2048SavedGameMoves").apply();
+            }
+        });
 
-                            Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
-                            startActivity(mainMenuIntent);
-                            finish();
-                            //Call Interstitial ad
-                            displayInterstitialAd();
+        if (score > 0 ){
+            AlertDialog popupMsg = popupMsgBuilder.create();
 
-                        }
-                    })
-                    .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+            popupMsg.show();
 
-                            // do Nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-
+        } else {
+            Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+            startActivity(mainMenuIntent);
+            finish();
         }
 
+/*        Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+        startActivity(mainMenuIntent);
+        finish();
+
+ */
     }
 
     @Override
@@ -989,30 +886,4 @@ public class Game2048 extends AppCompatActivity {
 
         return false;
     }
-
-
-    @Override
-    protected void onPause() {
-        if (mAdView != null){
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        if (mAdView != null){
-            mAdView.resume();
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
-    }
-
 }

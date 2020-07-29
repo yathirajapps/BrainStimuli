@@ -5,25 +5,18 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-
-import org.w3c.dom.Text;
-
 public class MainMenu extends AppCompatActivity {
-
-    TextView quickMathHighScoreText, trueFalseHighScoreText, game2048HighScoreText, game2048MovesText;
-    TextView puzzle15HighScoreText, puzzle15MovesText;
+    TextView quickMathHighScoreText, trueFalseHighScoreText, game2048HighScoreText, game2048MovesText, puzzle15TimeText, puzzle15MovesText;
     int quickMathHighScore = 0, trueFalseHighScore = 0, game2048HighScore, game2048BestMoves, puzzle15BestMoves;
     String puzzle15BestTime;
+
 
     public void showQuickMath(View view) {
 
@@ -46,7 +39,6 @@ public class MainMenu extends AppCompatActivity {
 
     public void showGame2048(View view){
         Log.i("Info", "Clicked on Relative Layout of Game 2048");
-        Log.i("LayoutChosen", view.getTag().toString());
         Intent game2048Intent = new Intent(getApplicationContext(), Game2048.class);
         game2048Intent.putExtra("Game2048HighScore", game2048HighScore);
         game2048Intent.putExtra("Game2048BestMoves", game2048BestMoves);
@@ -55,10 +47,11 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void showPuzzle15(View view){
-        Log.i("Info", "Clicked on Relative Layout of Puzzle15");
+        Log.i("Info", "Clicked on Relative Layout of Puzzle 15");
         Intent puzzle15Intent = new Intent(getApplicationContext(), Puzzle15.class);
-        puzzle15Intent.putExtra("Puzzle15BestTime", puzzle15BestTime);
         puzzle15Intent.putExtra("Puzzle15BestMoves", puzzle15BestMoves);
+        puzzle15Intent.putExtra("Puzzle15BestTime", puzzle15BestTime);
+        Log.i("Info", "Calling the Puzzle15 Class");
         startActivity(puzzle15Intent);
         finish();
     }
@@ -84,7 +77,6 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
 
         RelativeLayout quickMathLayout = (RelativeLayout)findViewById(R.id.quickMathRelLayout);
         RelativeLayout trueFalseLayout = (RelativeLayout)findViewById(R.id.trueFalseRelLayout);
@@ -123,8 +115,8 @@ public class MainMenu extends AppCompatActivity {
         trueFalseHighScoreText = (TextView) findViewById(R.id.trueFalseScore);
         game2048HighScoreText = (TextView) findViewById(R.id.game2048Score);
         game2048MovesText = (TextView)findViewById(R.id.game2048Moves);
-        puzzle15HighScoreText = (TextView)findViewById(R.id.puzzle15Score);
         puzzle15MovesText = (TextView)findViewById(R.id.puzzle15Moves);
+        puzzle15TimeText = (TextView)findViewById(R.id.puzzle15Time);
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
 
@@ -139,10 +131,18 @@ public class MainMenu extends AppCompatActivity {
         game2048BestMoves = sharedPreferences.getInt("Game2048BestMoves", 0);
         game2048MovesText.setText("Moves: " + Integer.toString(game2048BestMoves));
 
-        puzzle15BestTime = sharedPreferences.getString("Puzzle15BestTime", "00:00:00.000");
-        puzzle15HighScoreText.setText("Best Time: " + puzzle15BestTime);
-        puzzle15BestMoves = sharedPreferences.getInt("Puzzle15BestMoves", 0);
+        puzzle15BestMoves = sharedPreferences.getInt("Puzzle15BestMoves",0);
         puzzle15MovesText.setText("Moves: " + Integer.toString(puzzle15BestMoves));
+        puzzle15BestTime = sharedPreferences.getString("Puzzle15BestTime","00:00:00").split("\\.")[0]; //Get excluding milliSeconds
+        puzzle15TimeText.setText("Best Time: " + puzzle15BestTime);
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent startupActivity = new Intent(getApplicationContext(), StartupActivity.class);
+        startActivity(startupActivity);
+        finish();
     }
 }

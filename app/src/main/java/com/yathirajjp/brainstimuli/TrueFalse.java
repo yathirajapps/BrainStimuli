@@ -8,11 +8,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,19 +18,15 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class TrueFalse extends AppCompatActivity {
 
-    private AdView mAdView;
 
-    int minRandom = 0, maxRandom = 25, maxSecondsPerQuestion = 5;
+    int minRandom = 5, maxRandom = 25, maxSecondsPerQuestion = 5;
     Random random = new Random();
     ArrayList<String> operators = new ArrayList<>();
     TextView questionView;
@@ -43,7 +37,6 @@ public class TrueFalse extends AppCompatActivity {
     int trueFalse;  // 0 -> False,  1 -> True
     SharedPreferences sharedPreferences;
     int highScore = 0;
-    Handler handler;
 
 
     public int getRandom(int minimum, int maximum) {
@@ -123,10 +116,10 @@ public class TrueFalse extends AppCompatActivity {
         }
 
 
-        // Display the question & and the answers
+        // Display the equation
         questionView.setText(question);
 
-    }
+    } //End of generateQuestion
 
     public void showCustomDialog(String pHeading, String pScore) {
         final Dialog customDialog = new Dialog(TrueFalse.this);
@@ -136,7 +129,7 @@ public class TrueFalse extends AppCompatActivity {
         TextView yourScoreTextView = (TextView)customDialog.findViewById(R.id.yourScoreTextView);
         Button menuButton = (Button)customDialog.findViewById(R.id.menuButton);
         Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
-
+        Button leaderBoardButton = (Button)customDialog.findViewById(R.id.leaderboardButton);
 
         headerTextView.setText(pHeading);
         yourScoreTextView.setText(pScore);
@@ -167,25 +160,20 @@ public class TrueFalse extends AppCompatActivity {
             }
         });
 
+        //Method for LeadersBoard click
+        leaderBoardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TrueFalse.this, "Sorry, Leadersboard is still under development.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         customDialog.setCanceledOnTouchOutside(false);
         customDialog.setCancelable(false);
         customDialog.show();
 
-    }
-
-    public Runnable runCustDialog = new Runnable() {
-        @Override
-        public void run() {
-
-            //Show custom dialog here
-            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-            } else {
-                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-            }
-        }
-    };
+    } //End of showCustomDialog
 
     public void checkAnswer(View view) {
 
@@ -220,16 +208,15 @@ public class TrueFalse extends AppCompatActivity {
             waitTimer.cancel();
 
             //Call the custom dialog here
-//            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-//                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-//            } else {
-//                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-//            }
-            handler.postDelayed(runCustDialog, 500);
+            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+            } else {
+                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+            }
 
         }
 
-    }
+    } //End of checkAnswer
 
     public void startTrueFalse() {
         generateQuestion();
@@ -256,17 +243,15 @@ public class TrueFalse extends AppCompatActivity {
                 timerSeekbar.setProgress(0);
 
                 //Call the custom dialog here
-//                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-//                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-//                } else {
-//                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-//                }
-                handler.postDelayed(runCustDialog, 500);
+                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+                } else {
+                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+                }
             }
         }.start();
 
-    }
-
+    } //End of startTrueFalse
 
 
     @Override
@@ -274,16 +259,6 @@ public class TrueFalse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_true_false);
 
-        //Initialize the mobile ads SDK
-        MobileAds.initialize(TrueFalse.this, "@string/ad_app_id");
-        mAdView = findViewById(R.id.adView);
-
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-
-        //Start loading the add in the background
-        mAdView.loadAd(adRequest);
 
         questionView = (TextView) findViewById(R.id.questionTextView);
         scoreText = (TextView)findViewById(R.id.scoreTextView);
@@ -291,7 +266,6 @@ public class TrueFalse extends AppCompatActivity {
         timerSeekbar = (SeekBar)findViewById(R.id.timerSeekbar);
         highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
-        handler = new Handler();
 
         timerSeekbar.setMax(maxSecondsPerQuestion * 1000);
         timerSeekbar.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(ResourcesCompat.getColor(
@@ -310,7 +284,7 @@ public class TrueFalse extends AppCompatActivity {
         highScore = sharedPreferences.getInt("TrueFalseHighScore", 0);
 
         startTrueFalse();
-    }
+    } //End of onCreate
 
     @Override
     public void onBackPressed() {
@@ -330,29 +304,5 @@ public class TrueFalse extends AppCompatActivity {
         }
 
         return false;
-    }
-
-    @Override
-    protected void onPause() {
-        if (mAdView != null){
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        if (mAdView != null){
-            mAdView.resume();
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
     }
 }

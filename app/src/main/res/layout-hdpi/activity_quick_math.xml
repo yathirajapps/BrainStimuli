@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QuickMath">
+
+    <TextView
+        android:id="@+id/textViewHighScoreMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:visibility="invisible"
+        android:background="@color/appThemeColor"
+        android:fontFamily="@font/baumans"
+        android:text="Congratulations! You got a new high score"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <SeekBar
+        android:id="@+id/timerSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:clickable="false"
+        android:max="5500"
+        android:pointerIcon="none"
+        android:progress="5" />
+
+    <ImageView
+        android:id="@+id/timerImageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_alignBottom="@+id/timerTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:contentDescription="This is the Timer"
+        app:srcCompat="@drawable/timer"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_toEndOf="@+id/timerImageView"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/baumans"
+        android:text="0:05"
+        android:textColor="@color/appThemeColor"
+        android:textSize="16sp"/>
+
+    <ImageView
+        android:id="@+id/scoreImageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_alignBottom="@+id/timerTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        app:srcCompat="@drawable/thumb_up" />
+
+    <TextView
+        android:id="@+id/scoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_alignBottom="@+id/timerTextView"
+        android:layout_toStartOf="@+id/scoreImageView"
+        android:textColor="@color/appThemeColor"
+        android:fontFamily="@font/baumans"
+        android:text="0"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/baumans"
+        android:text="Question"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="30sp" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/answersGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:padding="10dp"
+        android:visibility="visible"
+        app:columnCount="2"
+        app:rowCount="2"
+        app:useDefaultMargins="true">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@drawable/round_btn"
+            android:fontFamily="@font/baumans"
+            android:onClick="checkAnswer"
+            android:tag="0"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_column="0"
+            app:layout_columnSpan="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_row="0"
+            app:layout_rowSpan="1"
+            app:layout_rowWeight="1" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@drawable/round_btn"
+            android:fontFamily="@font/baumans"
+            android:onClick="checkAnswer"
+            android:tag="1"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_column="1"
+            app:layout_columnSpan="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_row="0"
+            app:layout_rowSpan="1"
+            app:layout_rowWeight="1" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@drawable/round_btn"
+            android:fontFamily="@font/baumans"
+            android:onClick="checkAnswer"
+            android:tag="2"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_column="0"
+            app:layout_columnSpan="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_row="1"
+            app:layout_rowSpan="1"
+            app:layout_rowWeight="1" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@drawable/round_btn"
+            android:fontFamily="@font/baumans"
+            android:onClick="checkAnswer"
+            android:tag="3"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_column="1"
+            app:layout_columnSpan="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_row="1"
+            app:layout_rowSpan="1"
+            app:layout_rowWeight="1" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+
+</RelativeLayout>

@@ -16,6 +16,12 @@ public class Stopwatch {
         this.startTime = System.currentTimeMillis();
     }
 
+    //Method to start with earlier time
+    public void start(long timeDiff) {
+        running = true;
+        this.startTime = System.currentTimeMillis() - timeDiff;
+    }
+
     public void stop() {
         this.running = false;
     }
@@ -72,6 +78,15 @@ public class Stopwatch {
                 ":" + String.format(Locale.getDefault(), "%02d", getElapsedTimeMin()) +
                 ":" + String.format(Locale.getDefault(), "%02d", getElapsedTimeSecs()) +
                 "." + String.format(Locale.getDefault(), "%03d", getElapsedTimeMili());
+
+    }
+
+    // Text format(hh:mm:ss) of elapsed time
+    public String toStringHMS() {
+
+        return String.format(Locale.getDefault(), "%02d", getElapsedTimeHour()) +
+                ":" + String.format(Locale.getDefault(), "%02d", getElapsedTimeMin()) +
+                ":" + String.format(Locale.getDefault(), "%02d", getElapsedTimeSecs());
 
     }
 }

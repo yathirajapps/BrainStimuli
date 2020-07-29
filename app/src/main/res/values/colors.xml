@@ -7,4 +7,6 @@
     <color name="appThemeColor">#FFBB1193</color>
     <color name="grey">#FFC4C2C2</color>
     <color name="white">#FFF</color>
+    <color name="rightAnswer">#129312</color>
+    <color name="wrongAnswer">#FB5252</color>
 </resources>

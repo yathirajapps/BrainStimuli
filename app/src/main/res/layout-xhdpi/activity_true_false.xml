@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TrueFalse">
+
+    <TextView
+        android:id="@+id/textViewHighScoreMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:visibility="invisible"
+        android:background="@color/appThemeColor"
+        android:fontFamily="@font/baumans"
+        android:text="Congratulations! you got a new high score"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <SeekBar
+        android:id="@+id/timerSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:clickable="false"
+        android:max="5500"
+        android:pointerIcon="none"
+        android:progress="5" />
+
+    <ImageView
+        android:id="@+id/timerImageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/timerTextView"
+        android:layout_marginStart="20dp"
+        app:srcCompat="@drawable/timer" />
+
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_toEndOf="@+id/timerImageView"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/baumans"
+        android:text="0:05"
+        android:textColor="@color/appThemeColor"
+        android:textSize="16sp"/>
+
+    <ImageView
+        android:id="@+id/scoreImageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_alignBottom="@+id/timerTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        app:srcCompat="@drawable/thumb_up" />
+
+    <TextView
+        android:id="@+id/scoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timerSeekbar"
+        android:layout_alignBottom="@+id/timerTextView"
+        android:layout_toStartOf="@+id/scoreImageView"
+        android:textColor="@color/appThemeColor"
+        android:fontFamily="@font/baumans"
+        android:text="0"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timerImageView"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/baumans"
+        android:text="TextView"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:id="@+id/imageTrue"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginStart="40dp"
+        android:tag="1"
+        android:onClick="checkAnswer"
+        app:srcCompat="@drawable/thumb_up_green" />
+
+    <ImageView
+        android:id="@+id/imageFalse"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/imageTrue"
+        android:layout_marginEnd="40dp"
+        android:tag="0"
+        android:onClick="checkAnswer"
+        app:srcCompat="@drawable/thumb_down_red" />
+
+
+</RelativeLayout>

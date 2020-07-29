@@ -1,10 +1,21 @@
 package com.yathirajjp.brainstimuli;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 public class StartupActivity extends AppCompatActivity {
+
+    public void showMainMenu(View view){
+
+        Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+        startActivity(mainMenuIntent);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

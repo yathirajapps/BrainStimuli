@@ -1,44 +1,38 @@
 package com.yathirajjp.brainstimuli;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import java.util.Arrays;
 import java.util.Random;
 
 public class Puzzle15 extends AppCompatActivity {
 
-    private AdView mAdView;
     int[][] gameState, lastGameState, completeGameState = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
     int noOfMoves, bestMoves;
     TextView scoreText, highScoreText, noOfMovesText, highScoreMsgTextView, bestMovesText;
     SharedPreferences sharedPreferences;
-    String itemClicked = "", bestTime = "00:00:00.000";
+    String itemClicked = "", bestTime = "00:00:00";
     Long bestTimeMilliSec, currScoreTime;
-    boolean gameInProgress = false;
+    boolean gameInProgress = false, loadPrevGame = false;
     Stopwatch stopwatch;
     Handler handler;
 
@@ -47,10 +41,10 @@ public class Puzzle15 extends AppCompatActivity {
         @Override
         public void run() {
             String timerText = "";
-            timerText = "Time\n" + stopwatch.toString();
+            timerText = "Time\n" + stopwatch.toStringHMS();  //HH:MM:SS format without milliseconds
             scoreText.setText(timerText);
 
-            handler.postDelayed(runnable,10);
+            handler.postDelayed(runnable,500);
         }
     };
 
@@ -73,7 +67,7 @@ public class Puzzle15 extends AppCompatActivity {
                 gameInProgress = true;
                 //Start the timer
                 stopwatch.start();
-                handler.postDelayed(runnable, 10);
+                handler.postDelayed(runnable, 500);
             }
 
             int row, col;
@@ -113,7 +107,7 @@ public class Puzzle15 extends AppCompatActivity {
                 gameInProgress = true;
                 //Start the timer
                 stopwatch.start();
-                handler.postDelayed(runnable, 10);
+                handler.postDelayed(runnable, 500);
             }
 
             int row, col;
@@ -152,7 +146,7 @@ public class Puzzle15 extends AppCompatActivity {
                 gameInProgress = true;
                 //Start the timer
                 stopwatch.start();
-                handler.postDelayed(runnable, 10);
+                handler.postDelayed(runnable, 500);
             }
 
             int row, col;
@@ -191,7 +185,7 @@ public class Puzzle15 extends AppCompatActivity {
                 gameInProgress = true;
                 //Start the timer
                 stopwatch.start();
-                handler.postDelayed(runnable, 10);
+                handler.postDelayed(runnable, 500);
             }
 
             int row, col;
@@ -333,85 +327,180 @@ public class Puzzle15 extends AppCompatActivity {
         //Check if the Game is complete by forming a 2048 tile
         if (isGameComplete()){
 
+            CountDownTimer pauseNShow = new CountDownTimer(500,600) {
+                @Override
+                public void onTick(long l) {
 
-            String currTime = scoreText.getText().toString().split("\n")[1];
-            String[] timeParts = currTime.split(":");
-            String[] secMilliSec = timeParts[2].split("\\.");
+                }
 
-            currScoreTime = (Long.parseLong(timeParts[0]) * 60 * 60) + // Hours to Seconds
-                    (Long.parseLong(timeParts[1]) * 60) +  // Minutes to Seconds
-                    Long.parseLong(secMilliSec[0]); // Seconds
-            //Seconds to Milliseconds
-            currScoreTime *= 1000;
-            currScoreTime += Long.parseLong(secMilliSec[1]);
+                @Override
+                public void onFinish() {
 
-            if (currScoreTime < bestTimeMilliSec || bestTimeMilliSec <= 0){
-                bestTimeMilliSec = currScoreTime;
-                // Save the new best time and the moves.
-                sharedPreferences.edit().putString("Puzzle15BestTime", currTime).apply();
-                sharedPreferences.edit().putInt("Puzzle15BestMoves", noOfMoves).apply();
+                    String currTime = scoreText.getText().toString().split("\n")[1];
+                    String[] timeParts = currTime.split(":");
+                    String[] secMilliSec = timeParts[2].split("\\.");
 
-                //Display the best stats
-                highScoreText.setText("Time\n" + currTime);
-                bestMovesText.setText("Moves\n" + noOfMoves);
+                    currScoreTime = (Long.parseLong(timeParts[0]) * 60 * 60) + // Hours to Seconds
+                            (Long.parseLong(timeParts[1]) * 60) +  // Minutes to Seconds
+                            Long.parseLong(secMilliSec[0]); // Seconds
+                    //Seconds to Milliseconds
+                    currScoreTime *= 1000;
+                    //currScoreTime += Long.parseLong(secMilliSec[1]);
 
-            }
+                    if (currScoreTime < bestTimeMilliSec || bestTimeMilliSec <= 0){
+                        bestTimeMilliSec = currScoreTime;
+                        // Save the new best time and the moves.
+                        sharedPreferences.edit().putString("Puzzle15BestTime", currTime).apply();
+                        sharedPreferences.edit().putInt("Puzzle15BestMoves", noOfMoves).apply();
 
-            // Show the custom dialog
-            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                showCustomDialog("Game Complete!", "New Best Time: " + currTime);
-            } else {
-                showCustomDialog("Game Complete!", "Time: " + currTime);
-            }
+                        //Display the best stats
+                        highScoreText.setText("Time\n" + currTime.split("\\.")[0]); // Display excluding milli seconds
+                        bestMovesText.setText("Moves\n" + noOfMoves);
+
+                    }
+                    // Show the custom dialog
+                    if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                        showCustomDialog("Game Complete!", "New Best Time: " + currTime);
+                    } else {
+                        showCustomDialog("Game Complete!", "Time: " + currTime);
+                    }
+                }
+            }.start();
+
         }
     } // End of loadTiles
 
 
     public void startGame(){
 
-        scoreText.setText("Score\n00:00:00.000");
-
-        noOfMoves = 0;
-        noOfMovesText.setText("Moves\n" + String.format("%03d", noOfMoves));
+        scoreText.setText("Time\n00:00:00");
 
         highScoreMsgTextView.setVisibility(View.INVISIBLE);
 
-        //Initialize the game array
-        for (int i=0; i < 4; i++){
-            for (int j=0; j < 4; j++){
-                gameState[i][j] = 0;
+        if(loadPrevGame) {
+
+            //Load the Previous game state
+            for(int row=0; row < 4; row++) {
+                for(int col=0; col < 4; col++){
+                    gameState[row][col] = sharedPreferences.getInt("P15_" + row + "_" + col, 0);
+                }
             }
-        }
 
-        int row, col;
-        Random random = new Random();
+            noOfMoves = sharedPreferences.getInt("P15_PrevMoves", 0);
+            long prevTimeMilliSec = sharedPreferences.getLong("P15_PrevTimeMilliSec",0);
 
-        for (int num=1; num<=15; num++){
+            //Start the timer
+            stopwatch.start(prevTimeMilliSec);
+            handler.postDelayed(runnable, 500);
 
-            row = random.nextInt(4);
-            col = random.nextInt(4);
-            while (gameState[row][col] != 0){
+            gameInProgress = true;
+            loadPrevGame = false;
+
+        }else {
+            noOfMoves = 0;
+
+            //Initialize the game array
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    gameState[i][j] = 0;
+                }
+            }
+
+            int row, col;
+            Random random = new Random();
+
+            for (int num = 1; num <= 15; num++) {
+
                 row = random.nextInt(4);
                 col = random.nextInt(4);
-            }
+                while (gameState[row][col] != 0) {
+                    row = random.nextInt(4);
+                    col = random.nextInt(4);
+                }
 
-            gameState[row][col] = num;
+                gameState[row][col] = num;
+            }
         }
+
+
+        //Below commented code is for testing purpose - to easily finish the game
+/*
+        int num=1;
+        for (int i=0; i < 4; i++){
+            for (int j=0; j < 4; j++){
+                gameState[i][j] = num++;
+            }
+        }
+
+        gameState[3][3] = 15;
+        gameState[3][2] = 0;
+
+ */
+
+        noOfMovesText.setText("Moves\n" + String.format("%03d", noOfMoves));
 
         //Load the tiles as per gameState array
         loadTiles();
 
-
-    }
+    } //End of startGame
 
     public void restartGame(View view){
 
-        stopwatch.stop();
-        handler.removeCallbacks(runnable);
-        gameInProgress=false;
+        AlertDialog.Builder popupMsgBuilder = new AlertDialog.Builder(this);
 
-        startGame();
-    }
+        popupMsgBuilder.setTitle("Confirm");
+        popupMsgBuilder.setMessage("Game in progress. Are you sure to Restart?");
+
+        popupMsgBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                stopwatch.stop();
+                //handler.removeCallbacks(runnable);
+                gameInProgress=false;
+
+                startGame();
+            }
+        });
+
+        popupMsgBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //Do Nothing
+                stopwatch.resume();
+                handler.postDelayed(runnable,500);
+                dialogInterface.dismiss();
+            }
+        });
+
+        if (gameInProgress){
+            //Pause the clock as we are showing the confirmation pop-up msg
+            stopwatch.pause();
+            handler.removeCallbacks(runnable);
+
+            AlertDialog popupMsg = popupMsgBuilder.create();
+
+            //Commented code is to restrict clicking outside of AlertDialog
+            /*popupMsg.setCanceledOnTouchOutside(false);
+            popupMsg.setCancelable(false); */
+            popupMsg.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    stopwatch.resume();
+                    handler.postDelayed(runnable,500);
+                }
+            });
+
+            popupMsg.show();
+
+        } else {
+            stopwatch.stop();
+            handler.removeCallbacks(runnable);
+
+            startGame();
+        }
+    } //End of restartGame
 
 
     @Override
@@ -420,11 +509,14 @@ public class Puzzle15 extends AppCompatActivity {
         setContentView(R.layout.activity_puzzle15);
 
 
+        Log.i("Info", "Within onCreate of Puzzle15");
         scoreText = (TextView)findViewById(R.id.textViewCurrScoreValue);
         highScoreText = (TextView)findViewById(R.id.textViewHSValue);
         noOfMovesText = (TextView)findViewById(R.id.textViewNoOfMoves);
         bestMovesText = (TextView)findViewById(R.id.textViewBestMoves);
         highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
+
+        Log.i("Info", "After all findViewById");
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
         handler = new Handler();
         stopwatch = new Stopwatch();
@@ -436,6 +528,9 @@ public class Puzzle15 extends AppCompatActivity {
         bestMoves = intent.getIntExtra("Puzzle15BestMoves", 0);
         bestTime = intent.getStringExtra("Puzzle15BestTime");
 
+        highScoreText.setText("Time\n" + bestTime.split("\\.")[0]); //Display excluding the milli Seconds
+        bestMovesText.setText("Moves\n" + bestMoves);
+
         //Convert the best time in string to milliseconds
         String[] timeParts = bestTime.split(":");
         String[] secMilliSec = timeParts[2].split("\\.");
@@ -446,9 +541,40 @@ public class Puzzle15 extends AppCompatActivity {
         //Seconds to Milliseconds
         bestTimeMilliSec *= 1000;
 
-        bestTimeMilliSec += Long.parseLong(secMilliSec[1]);
+        //Not shwoing the milliseconds now
+        //bestTimeMilliSec += Long.parseLong(secMilliSec[1]);
 
-        startGame();
+        //Check if the previous game is stored and load if required
+        if(sharedPreferences.getString("P15_SavedGame", "No").equals("Yes")) {
+            //Previous game was saved. Check if the user wants to continue that or wants to start a new game
+            AlertDialog.Builder popupMsgBuilder = new AlertDialog.Builder(this);
+
+            popupMsgBuilder.setTitle("Confirm");
+            popupMsgBuilder.setMessage("Continue Previous Game?");
+            popupMsgBuilder.setCancelable(false);
+
+            popupMsgBuilder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    loadPrevGame = true;
+                    startGame();
+                }
+            });
+
+            popupMsgBuilder.setNegativeButton("New Game", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    loadPrevGame = false;
+                    startGame();
+                }
+            });
+
+            AlertDialog popupMsg = popupMsgBuilder.create();
+
+            sharedPreferences.edit().putString("P15_SavedGame", "No").apply();
+            popupMsg.show();
+        }
+        else { startGame();}
 
         // Set the OnTouchListener for all the 16 tiles
         MyTouchListener imageTouchListener = new MyTouchListener(Puzzle15.this);
@@ -465,28 +591,95 @@ public class Puzzle15 extends AppCompatActivity {
             }
         }
 
-        //Initialize the mobile ads SDK
-        MobileAds.initialize(Puzzle15.this, String.valueOf(R.string.ad_app_id));
-        mAdView = findViewById(R.id.adView);
-
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)  // AdRequest.DEVICE_ID_EMULATOR)    // Test Device: 7378D97884419E089614BB536911AA73
-                .build();
-
-        //Start loading the add in the background
-        mAdView.loadAd(adRequest);
-
     }
 
     @Override
     public void onBackPressed() {
 
-        stopwatch.stop();
-        handler.removeCallbacks(runnable);
+        //Handle saving the game, if In Progress
+        AlertDialog.Builder popupMsgBuilder = new AlertDialog.Builder(this);
 
-        Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
-        startActivity(mainMenuIntent);
-        finish();
+        popupMsgBuilder.setTitle("Confirm");
+        popupMsgBuilder.setMessage("Game is in progress!");
+
+        popupMsgBuilder.setPositiveButton("Save & Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //Save the Game before closing
+                //SharedPreferences to save the gavem
+                sharedPreferences.edit().putString("P15_SavedGame", "Yes").apply();
+
+                //Get the Current time lapse
+                String currTime = scoreText.getText().toString().split("\n")[1];
+                String[] timeParts = currTime.split(":");
+                String[] secMilliSec = timeParts[2].split("\\.");
+
+                currScoreTime = (Long.parseLong(timeParts[0]) * 60 * 60) + // Hours to Seconds
+                        (Long.parseLong(timeParts[1]) * 60) +  // Minutes to Seconds
+                        Long.parseLong(secMilliSec[0]); // Seconds
+                //Seconds to Milliseconds
+                currScoreTime *= 1000;
+
+                //Store the current gameState
+                for(int row=0; row < 4; row++){
+                    for(int col=0; col < 4; col++){
+                        sharedPreferences.edit().putInt("P15_" + row + "_" + col, gameState[row][col]).apply();
+                    }
+                }
+                sharedPreferences.edit().putInt("P15_PrevMoves", noOfMoves).apply();
+                sharedPreferences.edit().putLong("P15_PrevTimeMilliSec", currScoreTime).apply();
+
+                Toast.makeText(Puzzle15.this,"Game Saved.", Toast.LENGTH_SHORT).show();
+
+
+                //Close the game and return to main menu
+                stopwatch.stop();
+                handler.removeCallbacks(runnable);
+
+                Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+                startActivity(mainMenuIntent);
+                finish();
+            }
+        });
+
+        popupMsgBuilder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //Close the game and return to main menu
+                stopwatch.stop();
+                handler.removeCallbacks(runnable);
+
+                Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+                startActivity(mainMenuIntent);
+                finish();
+            }
+        });
+
+        if (gameInProgress){
+            //Pause the clock as we are showing the confirmation pop-up msg
+            stopwatch.pause();
+            handler.removeCallbacks(runnable);
+
+            final AlertDialog popupMsg = popupMsgBuilder.create();
+
+            //To restrict clicking outside of AlertDialog
+            popupMsg.setCanceledOnTouchOutside(false);
+            popupMsg.setCancelable(false);
+
+            popupMsg.show();
+
+        } else {
+            stopwatch.stop();
+            handler.removeCallbacks(runnable);
+
+            Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+            startActivity(mainMenuIntent);
+            finish();
+        }
+
+
 
     }
 

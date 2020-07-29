@@ -7,13 +7,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayout;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -23,18 +21,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 public class QuickMath extends AppCompatActivity {
 
-    private AdView mAdView;
-
-    int minRandom = 0, maxRandom = 25, maxSecondsPerQuestion = 5;
+    int minRandom = 5, maxRandom = 25, maxSecondsPerQuestion = 5;
     int correctAnsLoc, score = 0, highScore = 0;
     Random random = new Random();
     ArrayList<String> answers = new ArrayList<>();
@@ -44,8 +36,6 @@ public class QuickMath extends AppCompatActivity {
     CountDownTimer waitTimer;
     SeekBar timerSeekbar;
     SharedPreferences sharedPreferences;
-    Handler handler;
-
 
     public int getRandom(int minimum, int maximum) {
         return random.nextInt(maximum - minimum + 1) + minimum;
@@ -150,6 +140,9 @@ public class QuickMath extends AppCompatActivity {
                 }
             }
         } else if (operators.get(choosenOperator).equals("*")){
+            while (aNum ==0) { aNum = getRandom(minRandom, maxRandom);}
+            while(bNum == 0 || bNum == aNum) { bNum = getRandom(minRandom, maxRandom);}
+
             if (maskLocation == 0){
                 // Mask the number A in the question
                 question = "?" + " * " + Integer.toString(bNum) + " = " + Integer.toString(aNum * bNum);
@@ -193,7 +186,7 @@ public class QuickMath extends AppCompatActivity {
         button2.setText(answers.get(1));
         button3.setText(answers.get(2));
         button4.setText(answers.get(3));
-    }
+    } // End of generateQuestion
 
     public void showCustomDialog(String pHeading, String pScore) {
         final Dialog customDialog = new Dialog(QuickMath.this);
@@ -204,15 +197,9 @@ public class QuickMath extends AppCompatActivity {
         Button menuButton = (Button)customDialog.findViewById(R.id.menuButton);
         Button continueButton = (Button)customDialog.findViewById(R.id.continueButton);
         Button leaderBoardButton = (Button)customDialog.findViewById(R.id.leaderboardButton);
-        String questionWithAnswer;
-
-        questionWithAnswer = questionView.getText().toString();
-        questionWithAnswer = questionWithAnswer.replace("?", answers.get(correctAnsLoc));
-        questionWithAnswer = questionWithAnswer + "\n" + pScore;
-
 
         headerTextView.setText(pHeading);
-        yourScoreTextView.setText(questionWithAnswer);
+        yourScoreTextView.setText(pScore);
         //Method for Menu button click
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,25 +243,28 @@ public class QuickMath extends AppCompatActivity {
 
     }
 
-    public Runnable runCustDialog = new Runnable() {
-        @Override
-        public void run() {
-
-            //Show custom dialog here
-            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-            } else {
-                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-            }
-        }
-    };
-
     public void checkAnswer(View view) {
 
         if (view.getTag().equals(Integer.toString(correctAnsLoc))){
+
             score ++;
             scoreText.setText(Integer.toString(score));
             waitTimer.cancel();
+
+            //Set the background to Gree to show it is right answer
+            view.setBackground(getResources().getDrawable(R.drawable.round_btn_green));
+            CountDownTimer pauseScreen = new CountDownTimer(500,600) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    startQuickMath();
+                }
+            }.start();
+
 
             if (score > highScore){
                 //New High Score, store it
@@ -296,28 +286,46 @@ public class QuickMath extends AppCompatActivity {
                 }
             }
 
-            startQuickMath();
         }else {
             //Wrong answer.  Stop the quiz and popup the result
 
             waitTimer.cancel();
 
-            //Call the custom dialog here
-//            if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-//                showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-//            } else {
-//                showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-//            }
+            //Set the background to Red to show it is wrong answer
+            view.setBackground(getResources().getDrawable(R.drawable.round_btn_red));
 
-            handler.postDelayed(runCustDialog, 50);
+            CountDownTimer pauseScreen = new CountDownTimer(500,600) {
+                @Override
+                public void onTick(long l) {
 
+                }
+
+                @Override
+                public void onFinish() {
+                    //Call the custom dialog here
+                    if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                        showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+                    } else {
+                        showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+                    }
+                }
+            }.start();
         }
 
+    } // End of checkAnswer
 
+    private void resetAnswerButtons(){
 
-    }
+        button1.setBackground(getResources().getDrawable(R.drawable.round_btn));
+        button2.setBackground(getResources().getDrawable(R.drawable.round_btn));
+        button3.setBackground(getResources().getDrawable(R.drawable.round_btn));
+        button4.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+    } // End of resetAnswerButtons
 
     public void startQuickMath() {
+
+        resetAnswerButtons();
         generateQuestion();
 
         waitTimer = new CountDownTimer(maxSecondsPerQuestion * 1000, 10) {
@@ -342,12 +350,11 @@ public class QuickMath extends AppCompatActivity {
                 timerSeekbar.setProgress(0);
 
                 //Call the custom dialog here
-//                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
-//                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
-//                } else {
-//                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
-//                }
-                handler.postDelayed(runCustDialog, 50);
+                if (highScoreMsgTextView.getVisibility() == View.VISIBLE) {
+                    showCustomDialog("Game Over!", "New High Score: " + Integer.toString(score));
+                } else {
+                    showCustomDialog("Game Over!", "Your Score: " + Integer.toString(score));
+                }
             }
         }.start();
 
@@ -359,16 +366,6 @@ public class QuickMath extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quick_math);
 
-        //Initialize the mobile ads SDK
-        MobileAds.initialize(QuickMath.this, "@string/ad_app_id");
-        mAdView = findViewById(R.id.adView);
-
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)  //  Test Device: "7378D97884419E089614BB536911AA73"
-                .build();
-
-        //Start loading the add in the background
-        mAdView.loadAd(adRequest);
 
         questionView = (TextView) findViewById(R.id.questionTextView);
         button1 = (Button) findViewById(R.id.button1);
@@ -380,7 +377,6 @@ public class QuickMath extends AppCompatActivity {
         timerSeekbar = (SeekBar)findViewById(R.id.timerSeekbar);
         highScoreMsgTextView = (TextView)findViewById(R.id.textViewHighScoreMsg);
         sharedPreferences = getSharedPreferences("com.yathirajjp.brainstimuli", MODE_PRIVATE);
-        handler = new Handler();
 
         timerSeekbar.setMax(maxSecondsPerQuestion * 1000);
         timerSeekbar.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(ResourcesCompat.getColor(
@@ -426,29 +422,5 @@ public class QuickMath extends AppCompatActivity {
 
         return false;
 //        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPause() {
-        if (mAdView != null){
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        if (mAdView != null){
-            mAdView.resume();
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
     }
 }
